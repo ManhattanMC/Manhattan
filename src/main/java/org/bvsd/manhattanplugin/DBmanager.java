@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -214,123 +215,159 @@ public class DBmanager {
         Set<ItemStack> isl1 = new HashSet<>();
         Set<ItemStack> isl2 = new HashSet<>();
         try {
-            Scanner s = new Scanner(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"));
-            if(s.hasNext()){
-                String type = s.nextLine();
+            RandomAccessFile s = new RandomAccessFile(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"), "rw");
+//            Scanner s = new Scanner(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"));
+            while(s.getFilePointer() < s.length()){
+                String type = s.readLine();
                 if(type.equalsIgnoreCase("armor:")){
-                    Locale lh = s.locale();
-                    String h1 = s.nextLine();
+                    long lh = s.getFilePointer();
+                    String h1 = s.readLine();
                     while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
-                        String h2 = s.nextLine();
+                        String h2 = s.readLine();
                         String name = "-1";
                         String durab = "";
                         String num = "";
                         String typ  = "";
+                        boolean hasMeta = false;
+                        boolean isNil = false;
                         Set<String> lore;
                         lore = new HashSet<>();
                         Map<Enchantment, Integer> ench;
                         ench = new HashMap<>();
                         if(h2.equalsIgnoreCase("   - nil")){
+                            isNil = true;
                         }else{
                             typ = h2.replace("   - type: ","");
-                            num = s.nextLine().replace("   - number: ", "");
-                            durab = s.nextLine().replace("   - durab: ", "");
+                            num = s.readLine().replace("   - number: ", "");
+                            lh = s.getFilePointer();
+                            String ha = s.readLine();
+                            if(ha.contains("   - durab: ")){
+                                durab = durab.replace("   - durab: ", "");
+                            }else{
+                                s.seek(lh);
+                            }
                             lore = new HashSet<>();
                             ench = new HashMap<>();
-                            h2 = s.nextLine();
-                            while(!h2.equalsIgnoreCase(" - ArmorItemStack:")){
+                            h2 = s.readLine();
+                            while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
                                 if(h2.equalsIgnoreCase("   - name: ")){
+                                    hasMeta = true;
                                     name = h2.replace("   - name: ", "");
                                 }else if(h2.equalsIgnoreCase("     - lore:")){
-                                    String l1 = s.nextLine();
+                                    hasMeta = true;
+                                    String l1 = s.readLine();
                                     while(l1.contains("       - ")){
                                         lore.add(l1.replace("       - ", ""));
-                                        lh = s.locale();
-                                        l1 = s.nextLine();
+                                        lh = s.getFilePointer();
+                                        l1 = s.readLine();
                                     }
-                                    s.useLocale(lh);
+                                    s.seek(lh);
                                 }else if(h2.equalsIgnoreCase("     - enchants:")){
-                                    String enchtyp = s.nextLine().replace("       - name: ", "");
-                                    int enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                    hasMeta = true;
+                                    String enchtyp = s.readLine().replace("       - name: ", "");
+                                    int enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
                                     ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                    lh = s.locale();
-                                    String h3 = s.nextLine();
+                                    lh = s.getFilePointer();
+                                    String h3 = s.readLine();
                                     while(h3.contains("       - name: ")){
-                                        enchtyp = s.nextLine().replace("       - name: ", "");
-                                        enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                        enchtyp = h3.replace("       - name: ", "");
+                                        enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
                                         ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                        lh = s.locale();
-                                        h3 = s.nextLine();
+                                        lh = s.getFilePointer();
+                                        h3 = s.readLine();
                                     }
-                                    s.useLocale(lh);
+                                    s.seek(lh);
                                 }
-                                lh = s.locale();
-                                h2 = s.nextLine();
+                                lh = s.getFilePointer();
+                                h2 = s.readLine();
                             }
                             
-                            s.useLocale(lh);
+                            s.seek(lh);
                         }
-                        isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num)));
+                        if(isNil){
+                            isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
+                        }else{
+                            isl1.add(null);
+                        }
+                       h1 = s.readLine();
                     }
-                    s.useLocale(lh);
+                    s.seek(lh);
                 }else if(type.equalsIgnoreCase("main:")){
-                    Locale lh = s.locale();
-                    String h1 = s.nextLine();
+                    long lh = s.getFilePointer();
+                    String h1 = s.readLine();
                     while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
-                        String h2 = s.nextLine();
+                        System.out.println("enter");
+                        String h2 = s.readLine();
                         String name = "-1";
                         String durab = "";
                         String num = "";
                         String typ  = "";
+                        boolean hasMeta = false;
+                        boolean isNil = false;
                         Set<String> lore;
                         lore = new HashSet<>();
                         Map<Enchantment, Integer> ench;
                         ench = new HashMap<>();
                         if(h2.equalsIgnoreCase("   - nil")){
+                            isNil = true;
                         }else{
                             typ = h2.replace("   - type: ","");
-                            num = s.nextLine().replace("   - number: ", "");
-                            durab = s.nextLine().replace("   - durab: ", "");
+                            num = s.readLine().replace("   - number: ", "");
+                            lh = s.getFilePointer();
+                            String ha = s.readLine();
+                            if(ha.contains("   - durab: ")){
+                                durab = durab.replace("   - durab: ", "");
+                            }else{
+                                s.seek(lh);
+                            }
                             lore = new HashSet<>();
                             ench = new HashMap<>();
-                            h2 = s.nextLine();
-                            while(!h2.equalsIgnoreCase(" - ArmorItemStack:")){
+                            h2 = s.readLine();
+                            while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
                                 if(h2.equalsIgnoreCase("   - name: ")){
+                                    hasMeta = true;
                                     name = h2.replace("   - name: ", "");
                                 }else if(h2.equalsIgnoreCase("     - lore:")){
-                                    String l1 = s.nextLine();
+                                    hasMeta = true;
+                                    String l1 = s.readLine();
                                     while(l1.contains("       - ")){
                                         lore.add(l1.replace("       - ", ""));
-                                        lh = s.locale();
-                                        l1 = s.nextLine();
+                                        lh = s.getFilePointer();
+                                        l1 = s.readLine();
                                     }
-                                    s.useLocale(lh);
+                                    s.seek(lh);
                                 }else if(h2.equalsIgnoreCase("     - enchants:")){
-                                    String enchtyp = s.nextLine().replace("       - name: ", "");
-                                    int enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                    hasMeta = true;
+                                    String enchtyp = s.readLine().replace("       - name: ", "");
+                                    int enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
                                     ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                    lh = s.locale();
-                                    String h3 = s.nextLine();
+                                    lh = s.getFilePointer();
+                                    String h3 = s.readLine();
                                     while(h3.contains("       - name: ")){
-                                        enchtyp = s.nextLine().replace("       - name: ", "");
-                                        enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                        enchtyp = h3.replace("       - name: ", "");
+                                        enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
                                         ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                        lh = s.locale();
-                                        h3 = s.nextLine();
+                                        lh = s.getFilePointer();
+                                        h3 = s.readLine();
                                     }
-                                    s.useLocale(lh);
+                                    s.seek(lh);
                                 }
-                                lh = s.locale();
-                                h2 = s.nextLine();
+                                lh = s.getFilePointer();
+                                h2 = s.readLine();
                             }
                             
-                            s.useLocale(lh);
+                            s.seek(lh);
                         }
-                        isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num)));
+                        if(isNil){
+                            isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
+                        }else{
+                            isl1.add(null);
+                        }
+                       h1 = s.readLine();
                     }
-                    s.useLocale(lh);
+                    s.seek(lh);
                 }else if(type.equalsIgnoreCase("oldloc:")){
-                    /////NEEDED
+                    oldLoc = new Location(Bukkit.getWorld(s.readLine().replace(" - Wname : ", "")), Integer.parseInt(s.readLine().replace(" - X: ", "")), Integer.parseInt(s.readLine().replace(" - Y: ", "")), Integer.parseInt(s.readLine().replace(" - Z: ", "")));
                 }else if(type.contains("World: ")){
                     wrld = type.replace("World: ", "").charAt(0);
                 }else if(type.contains("beenC: ")){
@@ -339,6 +376,8 @@ public class DBmanager {
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            System.out.println("IO ERROR");
         }
         ItemStack[] inven1 = new ItemStack[isl1.size()];
         isl1.toArray(inven1); // fill the array
@@ -346,6 +385,9 @@ public class DBmanager {
         isl2.toArray(inven2); // fill the array
         Playerdats.put(pName, new PlayerDat(wrld, oldLoc, inven1, inven2, bc));
     }
+    ///Done
+    //with
+    //player load
     public static void SaveDG(){
         FileConfiguration configF = mms.plugin.getConfig();
         configF.set("DeathGames.players", DGplayers);
@@ -394,7 +436,11 @@ public class DBmanager {
             HZones.add(new HostileZone(loc, rad, diff));
         }
     }
-    private static ItemStack mkIs(String name, Set<String> lore, Material type, short durab, Map<Enchantment, Integer> ench, int stack){
+    private static ItemStack mkIs(String name, Set<String> lore, Material type, short durab, Map<Enchantment, Integer> ench, int stack, boolean hasMeta){
+        ItemStack rtn = new ItemStack(type);
+        if(!name.equalsIgnoreCase("-1")){
+            
+        }
         return null;
     }
 }
