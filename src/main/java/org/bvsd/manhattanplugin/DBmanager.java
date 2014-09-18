@@ -12,8 +12,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -205,12 +208,142 @@ public class DBmanager {
             }
     }
     public static void LoadPlayers(String pName){
+        char wrld = ' ';
+        boolean bc = true;
+        Location oldLoc = null;
+        Set<ItemStack> isl1 = new HashSet<>();
+        Set<ItemStack> isl2 = new HashSet<>();
         try {
             Scanner s = new Scanner(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"));
-            
+            if(s.hasNext()){
+                String type = s.nextLine();
+                if(type.equalsIgnoreCase("armor:")){
+                    Locale lh = s.locale();
+                    String h1 = s.nextLine();
+                    while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
+                        String h2 = s.nextLine();
+                        String name = "-1";
+                        String durab = "";
+                        String num = "";
+                        String typ  = "";
+                        Set<String> lore;
+                        lore = new HashSet<>();
+                        Map<Enchantment, Integer> ench;
+                        ench = new HashMap<>();
+                        if(h2.equalsIgnoreCase("   - nil")){
+                        }else{
+                            typ = h2.replace("   - type: ","");
+                            num = s.nextLine().replace("   - number: ", "");
+                            durab = s.nextLine().replace("   - durab: ", "");
+                            lore = new HashSet<>();
+                            ench = new HashMap<>();
+                            h2 = s.nextLine();
+                            while(!h2.equalsIgnoreCase(" - ArmorItemStack:")){
+                                if(h2.equalsIgnoreCase("   - name: ")){
+                                    name = h2.replace("   - name: ", "");
+                                }else if(h2.equalsIgnoreCase("     - lore:")){
+                                    String l1 = s.nextLine();
+                                    while(l1.contains("       - ")){
+                                        lore.add(l1.replace("       - ", ""));
+                                        lh = s.locale();
+                                        l1 = s.nextLine();
+                                    }
+                                    s.useLocale(lh);
+                                }else if(h2.equalsIgnoreCase("     - enchants:")){
+                                    String enchtyp = s.nextLine().replace("       - name: ", "");
+                                    int enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                    ench.put(Enchantment.getByName(enchtyp), enchlvl);
+                                    lh = s.locale();
+                                    String h3 = s.nextLine();
+                                    while(h3.contains("       - name: ")){
+                                        enchtyp = s.nextLine().replace("       - name: ", "");
+                                        enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                        ench.put(Enchantment.getByName(enchtyp), enchlvl);
+                                        lh = s.locale();
+                                        h3 = s.nextLine();
+                                    }
+                                    s.useLocale(lh);
+                                }
+                                lh = s.locale();
+                                h2 = s.nextLine();
+                            }
+                            
+                            s.useLocale(lh);
+                        }
+                        isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num)));
+                    }
+                    s.useLocale(lh);
+                }else if(type.equalsIgnoreCase("main:")){
+                    Locale lh = s.locale();
+                    String h1 = s.nextLine();
+                    while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
+                        String h2 = s.nextLine();
+                        String name = "-1";
+                        String durab = "";
+                        String num = "";
+                        String typ  = "";
+                        Set<String> lore;
+                        lore = new HashSet<>();
+                        Map<Enchantment, Integer> ench;
+                        ench = new HashMap<>();
+                        if(h2.equalsIgnoreCase("   - nil")){
+                        }else{
+                            typ = h2.replace("   - type: ","");
+                            num = s.nextLine().replace("   - number: ", "");
+                            durab = s.nextLine().replace("   - durab: ", "");
+                            lore = new HashSet<>();
+                            ench = new HashMap<>();
+                            h2 = s.nextLine();
+                            while(!h2.equalsIgnoreCase(" - ArmorItemStack:")){
+                                if(h2.equalsIgnoreCase("   - name: ")){
+                                    name = h2.replace("   - name: ", "");
+                                }else if(h2.equalsIgnoreCase("     - lore:")){
+                                    String l1 = s.nextLine();
+                                    while(l1.contains("       - ")){
+                                        lore.add(l1.replace("       - ", ""));
+                                        lh = s.locale();
+                                        l1 = s.nextLine();
+                                    }
+                                    s.useLocale(lh);
+                                }else if(h2.equalsIgnoreCase("     - enchants:")){
+                                    String enchtyp = s.nextLine().replace("       - name: ", "");
+                                    int enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                    ench.put(Enchantment.getByName(enchtyp), enchlvl);
+                                    lh = s.locale();
+                                    String h3 = s.nextLine();
+                                    while(h3.contains("       - name: ")){
+                                        enchtyp = s.nextLine().replace("       - name: ", "");
+                                        enchlvl = Integer.parseInt(s.nextLine().replace("       - lvl: ", ""));
+                                        ench.put(Enchantment.getByName(enchtyp), enchlvl);
+                                        lh = s.locale();
+                                        h3 = s.nextLine();
+                                    }
+                                    s.useLocale(lh);
+                                }
+                                lh = s.locale();
+                                h2 = s.nextLine();
+                            }
+                            
+                            s.useLocale(lh);
+                        }
+                        isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num)));
+                    }
+                    s.useLocale(lh);
+                }else if(type.equalsIgnoreCase("oldloc:")){
+                    /////NEEDED
+                }else if(type.contains("World: ")){
+                    wrld = type.replace("World: ", "").charAt(0);
+                }else if(type.contains("beenC: ")){
+                    bc = Boolean.valueOf(type.replace("beenC: ", ""));
+                }
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ItemStack[] inven1 = new ItemStack[isl1.size()];
+        isl1.toArray(inven1); // fill the array
+        ItemStack[] inven2 = new ItemStack[isl2.size()];
+        isl2.toArray(inven2); // fill the array
         Playerdats.put(pName, new PlayerDat(wrld, oldLoc, inven1, inven2, bc));
     }
     public static void SaveDG(){
