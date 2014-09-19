@@ -101,7 +101,17 @@ public class Commands implements CommandExecutor{
                 player.teleport(pd.lastLoc);
                 player.getInventory().clear();
                 player.getInventory().setContents(pd.mainInven);
-                player.getInventory().setArmorContents(pd.armorInven);
+                for(ItemStack is : pd.armorInven){
+                    if(is.getType().toString().contains("helmet")){
+                        player.getInventory().setHelmet(is);
+                    }else if(is.getType().toString().contains("chestplate")){
+                        player.getInventory().setChestplate(is);
+                    }else if(is.getType().toString().contains("leggings")){
+                        player.getInventory().setLeggings(is);
+                    }else if(is.getType().toString().contains("boots")){
+                        player.getInventory().setBoots(is);
+                    }
+                }
                 player.setGameMode(GameMode.SURVIVAL);
                 DBmanager.Playerdats.put(player.getName(), new PlayerDat('s', oldloc, oldInven1, oldInven2, true));
                 if(mms.oldTargets.contains(player.getName())){
@@ -122,7 +132,17 @@ public class Commands implements CommandExecutor{
                 }
                 player.getInventory().clear();
                 player.getInventory().setContents(pd.mainInven);
-                player.getInventory().setArmorContents(pd.armorInven);
+                for(ItemStack is : pd.armorInven){
+                    if(is.getType().toString().contains("helmet")){
+                        player.getInventory().setHelmet(is);
+                    }else if(is.getType().toString().contains("chestplate")){
+                        player.getInventory().setChestplate(is);
+                    }else if(is.getType().toString().contains("leggings")){
+                        player.getInventory().setLeggings(is);
+                    }else if(is.getType().toString().contains("boots")){
+                        player.getInventory().setBoots(is);
+                    }
+                }
                 player.setGameMode(GameMode.CREATIVE);
                 pd.mainInven = oldInven1;
                 pd.armorInven = oldInven2;

@@ -19,6 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -38,6 +39,9 @@ public class Listeners implements Listener{
             p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
             mms.oldTargets.remove(p.getName());
         }
+    }
+    public void onPlayerQuit(PlayerQuitEvent e){
+        DBmanager.Playerdats.remove(e.getPlayer().getName());
     }
     @EventHandler
     public void blockChestInterract(PlayerInteractEvent e) {

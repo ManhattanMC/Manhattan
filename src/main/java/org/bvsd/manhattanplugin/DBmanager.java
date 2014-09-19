@@ -223,15 +223,17 @@ public class DBmanager {
                     long lh = s.getFilePointer();
                     String h1 = s.readLine();
                     while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
+                                System.out.println("entering ais");
+
                         String h2 = s.readLine();
                         String name = "-1";
-                        String durab = "";
+                        String durab = "-1";
                         String num = "";
                         String typ  = "";
                         boolean hasMeta = false;
                         boolean isNil = false;
-                        Set<String> lore;
-                        lore = new HashSet<>();
+                        List<String> lore;
+                        lore = new ArrayList<>();
                         Map<Enchantment, Integer> ench;
                         ench = new HashMap<>();
                         if(h2.equalsIgnoreCase("   - nil")){
@@ -246,7 +248,7 @@ public class DBmanager {
                             }else{
                                 s.seek(lh);
                             }
-                            lore = new HashSet<>();
+                            lore = new ArrayList<>();
                             ench = new HashMap<>();
                             h2 = s.readLine();
                             while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
@@ -281,11 +283,10 @@ public class DBmanager {
                                 lh = s.getFilePointer();
                                 h2 = s.readLine();
                             }
-                            
                             s.seek(lh);
                         }
-                        if(isNil){
-                            isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
+                        if(!isNil){
+                            isl1.add(DBmanager.mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
                         }else{
                             isl1.add(null);
                         }
@@ -295,17 +296,18 @@ public class DBmanager {
                 }else if(type.equalsIgnoreCase("main:")){
                     long lh = s.getFilePointer();
                     String h1 = s.readLine();
-                    while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
-                        System.out.println("enter");
+                    while(h1.equalsIgnoreCase(" - MainItemStack:")){
+                                System.out.println("entering mis");
+
                         String h2 = s.readLine();
                         String name = "-1";
-                        String durab = "";
+                        String durab = "-1";
                         String num = "";
                         String typ  = "";
                         boolean hasMeta = false;
                         boolean isNil = false;
-                        Set<String> lore;
-                        lore = new HashSet<>();
+                        List<String> lore;
+                        lore = new ArrayList<>();
                         Map<Enchantment, Integer> ench;
                         ench = new HashMap<>();
                         if(h2.equalsIgnoreCase("   - nil")){
@@ -320,7 +322,7 @@ public class DBmanager {
                             }else{
                                 s.seek(lh);
                             }
-                            lore = new HashSet<>();
+                            lore = new ArrayList<>();
                             ench = new HashMap<>();
                             h2 = s.readLine();
                             while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
@@ -355,35 +357,39 @@ public class DBmanager {
                                 lh = s.getFilePointer();
                                 h2 = s.readLine();
                             }
-                            
                             s.seek(lh);
                         }
-                        if(isNil){
-                            isl1.add(mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
+                        if(!isNil){
+                            isl2.add(DBmanager.mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
                         }else{
-                            isl1.add(null);
+                            isl2.add(null);
                         }
                        h1 = s.readLine();
                     }
                     s.seek(lh);
                 }else if(type.equalsIgnoreCase("oldloc:")){
-                    oldLoc = new Location(Bukkit.getWorld(s.readLine().replace(" - Wname : ", "")), Integer.parseInt(s.readLine().replace(" - X: ", "")), Integer.parseInt(s.readLine().replace(" - Y: ", "")), Integer.parseInt(s.readLine().replace(" - Z: ", "")));
+                    System.out.println("enter");
+                    oldLoc = new Location(Bukkit.getWorld(s.readLine().replace(" - Wname: ", "")), Integer.parseInt(s.readLine().replace(" - X: ", "")), Integer.parseInt(s.readLine().replace(" - Y: ", "")), Integer.parseInt(s.readLine().replace(" - Z: ", "")));
                 }else if(type.contains("World: ")){
                     wrld = type.replace("World: ", "").charAt(0);
                 }else if(type.contains("beenC: ")){
                     bc = Boolean.valueOf(type.replace("beenC: ", ""));
                 }
             }
+            s.close();
+            s=null;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             System.out.println("IO ERROR");
         }
+        System.out.println(oldLoc.toString());
         ItemStack[] inven1 = new ItemStack[isl1.size()];
         isl1.toArray(inven1); // fill the array
         ItemStack[] inven2 = new ItemStack[isl2.size()];
         isl2.toArray(inven2); // fill the array
-        Playerdats.put(pName, new PlayerDat(wrld, oldLoc, inven1, inven2, bc));
+        Playerdats.put(pName, new PlayerDat(wrld, oldLoc, inven2, inven1, bc));
+        
     }
     ///Done
     //with
@@ -436,11 +442,27 @@ public class DBmanager {
             HZones.add(new HostileZone(loc, rad, diff));
         }
     }
-    private static ItemStack mkIs(String name, Set<String> lore, Material type, short durab, Map<Enchantment, Integer> ench, int stack, boolean hasMeta){
+    private static ItemStack mkIs(String name, List<String> lore, Material type, short durab, Map<Enchantment, Integer> ench, int stack, boolean hasMeta){
+        System.out.println(type);
+        System.out.println(stack);
+        System.out.println(hasMeta);
+        System.out.println(ench);
+        System.out.println("----------");
         ItemStack rtn = new ItemStack(type);
-        if(!name.equalsIgnoreCase("-1")){
-            
+        if(durab == -1){
+            rtn.setDurability(durab);
         }
-        return null;
+        rtn.setAmount(stack);
+        if(hasMeta){
+            ItemMeta ism = rtn.getItemMeta();
+            for(Enchantment e : ench.keySet()){
+                ism.addEnchant(e, ench.get(e), true);
+            }
+            if(!name.equalsIgnoreCase("-1")){
+                ism.setDisplayName(name);
+            }
+            ism.setLore(lore);
+        }
+        return rtn;
     }
 }
