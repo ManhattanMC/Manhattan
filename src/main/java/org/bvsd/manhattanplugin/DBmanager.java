@@ -13,14 +13,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -212,8 +207,8 @@ public class DBmanager {
         char wrld = ' ';
         boolean bc = true;
         Location oldLoc = null;
-        Set<ItemStack> isl1 = new HashSet<>();
-        Set<ItemStack> isl2 = new HashSet<>();
+        ArrayList<ItemStack> isl1 = new ArrayList<>();
+        ArrayList<ItemStack> isl2 = new ArrayList<>();
         try {
             RandomAccessFile s = new RandomAccessFile(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"), "rw");
 //            Scanner s = new Scanner(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"));
@@ -244,7 +239,8 @@ public class DBmanager {
                             lh = s.getFilePointer();
                             String ha = s.readLine();
                             if(ha.contains("   - durab: ")){
-                                durab = durab.replace("   - durab: ", "");
+                                durab = ha.replace("   - durab: ", "");
+                                lh = s.getFilePointer();
                             }else{
                                 s.seek(lh);
                             }
@@ -318,7 +314,8 @@ public class DBmanager {
                             lh = s.getFilePointer();
                             String ha = s.readLine();
                             if(ha.contains("   - durab: ")){
-                                durab = durab.replace("   - durab: ", "");
+                                durab = ha.replace("   - durab: ", "");
+                                lh = s.getFilePointer();
                             }else{
                                 s.seek(lh);
                             }

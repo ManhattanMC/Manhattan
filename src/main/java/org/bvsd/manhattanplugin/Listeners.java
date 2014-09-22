@@ -62,45 +62,49 @@ public class Listeners implements Listener{
         if (damager instanceof Player && target instanceof Player){
             Player att = (Player) damager;
             Player targ = (Player) target;
-            if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-                boolean inZone = false;
-                for(HostileZone z:DBmanager.HZones){
-                    if(z.inZone(att.getLocation())&&z.inZone(targ.getLocation())){
-                        inZone=true;
-                    }
-                }
-                if(!inZone){
-                    att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
-                    e.setCancelled(true);
-                }
-            }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-                if(!DBmanager.DGplayers.contains(att.getName())){
-                    att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
-                    e.setCancelled(true);
-                }
-            }
+            att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+            e.setCancelled(true);
+//            if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+//                boolean inZone = false;
+//                for(HostileZone z:DBmanager.HZones){
+//                    if(z.inZone(att.getLocation())&&z.inZone(targ.getLocation())){
+//                        inZone=true;
+//                    }
+//                }
+//                if(!inZone){
+//                    att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+//                    e.setCancelled(true);
+//                }
+//            }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+//                if(!DBmanager.DGplayers.contains(att.getName())){
+//                    att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
+//                    e.setCancelled(true);
+//                }
+//            }
         }else if (damager instanceof Projectile && target instanceof Player){
             final LivingEntity shooter = ((Projectile)damager).getShooter();
             if (shooter instanceof Player){
                 Player att = (Player) shooter;
                 Player targ = (Player) target;
-                if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-                    boolean inZone = false;
-                    for(HostileZone z:DBmanager.HZones){
-                        if(z.inZone(att.getLocation())&&z.inZone(targ.getLocation())){
-                            inZone=true;
-                        }
-                    }
-                    if(!inZone){
-                        att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
-                        e.setCancelled(true);
-                    }
-                }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-                    if(!DBmanager.DGplayers.contains(att.getName())){
-                        att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
-                        e.setCancelled(true);
-                    }
-                }
+                att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+                e.setCancelled(true);
+//                if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+//                    boolean inZone = false;
+//                    for(HostileZone z:DBmanager.HZones){
+//                        if(z.inZone(att.getLocation())&&z.inZone(targ.getLocation())){
+//                            inZone=true;
+//                        }
+//                    }
+//                    if(!inZone){
+//                        att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+//                        e.setCancelled(true);
+//                    }
+//                }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+//                    if(!DBmanager.DGplayers.contains(att.getName())){
+//                        att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
+//                        e.setCancelled(true);
+//                    }
+//                }
             }
         }
     }
