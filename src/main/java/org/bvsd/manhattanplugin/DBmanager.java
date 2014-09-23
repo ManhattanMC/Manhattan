@@ -115,8 +115,6 @@ public class DBmanager {
                     writer.println(" - Y: " + Playerdats.get(name).lastLoc.getBlockY());
                     writer.println(" - Z: " + Playerdats.get(name).lastLoc.getBlockZ());
 
-                    writer.println("World: " + Playerdats.get(name).world);
-
                     writer.println("beenC: " + Playerdats.get(name).beenCreate);
                 }
             }catch (IOException ex) {
@@ -195,8 +193,6 @@ public class DBmanager {
                     writer.println(" - Y: " + Playerdats.get(name).lastLoc.getBlockY());
                     writer.println(" - Z: " + Playerdats.get(name).lastLoc.getBlockZ());
 
-                    writer.println("World: " + Playerdats.get(name).world);
-
                     writer.println("beenC: " + Playerdats.get(name).beenCreate);
                 }
             }catch (IOException ex) {
@@ -218,8 +214,6 @@ public class DBmanager {
                     long lh = s.getFilePointer();
                     String h1 = s.readLine();
                     while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
-                                System.out.println("entering ais");
-
                         String h2 = s.readLine();
                         String name = "-1";
                         String durab = "-1";
@@ -248,6 +242,7 @@ public class DBmanager {
                             ench = new HashMap<>();
                             h2 = s.readLine();
                             while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
+                                
                                 if(h2.equalsIgnoreCase("   - name: ")){
                                     hasMeta = true;
                                     name = h2.replace("   - name: ", "");
@@ -279,6 +274,7 @@ public class DBmanager {
                                 lh = s.getFilePointer();
                                 h2 = s.readLine();
                             }
+                            System.out.println(h2);
                             s.seek(lh);
                         }
                         if(!isNil){
@@ -293,7 +289,6 @@ public class DBmanager {
                     long lh = s.getFilePointer();
                     String h1 = s.readLine();
                     while(h1.equalsIgnoreCase(" - MainItemStack:")){
-                                System.out.println("entering mis");
 
                         String h2 = s.readLine();
                         String name = "-1";
@@ -322,6 +317,7 @@ public class DBmanager {
                             lore = new ArrayList<>();
                             ench = new HashMap<>();
                             h2 = s.readLine();
+                            System.out.println(h2);
                             while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
                                 if(h2.equalsIgnoreCase("   - name: ")){
                                     hasMeta = true;
@@ -353,6 +349,7 @@ public class DBmanager {
                                 }
                                 lh = s.getFilePointer();
                                 h2 = s.readLine();
+                                System.out.println(h2);
                             }
                             s.seek(lh);
                         }
@@ -367,8 +364,6 @@ public class DBmanager {
                 }else if(type.equalsIgnoreCase("oldloc:")){
                     System.out.println("enter");
                     oldLoc = new Location(Bukkit.getWorld(s.readLine().replace(" - Wname: ", "")), Integer.parseInt(s.readLine().replace(" - X: ", "")), Integer.parseInt(s.readLine().replace(" - Y: ", "")), Integer.parseInt(s.readLine().replace(" - Z: ", "")));
-                }else if(type.contains("World: ")){
-                    wrld = type.replace("World: ", "").charAt(0);
                 }else if(type.contains("beenC: ")){
                     bc = Boolean.valueOf(type.replace("beenC: ", ""));
                 }
@@ -441,12 +436,10 @@ public class DBmanager {
     }
     private static ItemStack mkIs(String name, List<String> lore, Material type, short durab, Map<Enchantment, Integer> ench, int stack, boolean hasMeta){
         System.out.println(type);
-        System.out.println(stack);
-        System.out.println(hasMeta);
-        System.out.println(ench);
+        System.out.println(durab);
         System.out.println("----------");
         ItemStack rtn = new ItemStack(type);
-        if(durab == -1){
+        if(durab != -1){
             rtn.setDurability(durab);
         }
         rtn.setAmount(stack);
@@ -459,6 +452,7 @@ public class DBmanager {
                 ism.setDisplayName(name);
             }
             ism.setLore(lore);
+            rtn.setItemMeta(ism);
         }
         return rtn;
     }

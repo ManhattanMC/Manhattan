@@ -94,7 +94,7 @@ public class Commands implements CommandExecutor{
         if(cmd.getName().equalsIgnoreCase("worldjump") && args.length > 0){
             PlayerDat pd = DBmanager.Playerdats.get(player.getName());
 //            player.sendMessage(String.valueOf(DBmanager.Playerdats));
-            if(args[0].equalsIgnoreCase("survival") && pd.world != 's'){
+            if(args[0].equalsIgnoreCase("survival") && player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();
@@ -119,10 +119,10 @@ public class Commands implements CommandExecutor{
                     player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     mms.oldTargets.remove(player.getName());
                 }
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "clear " + player.getName());
+//                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "clear " + player.getName());
                 return true;
             }
-            if(args[0].equalsIgnoreCase("creative") && pd.world != 'c'){
+            if(args[0].equalsIgnoreCase("creative") && player.getLocation().getWorld().getName().equalsIgnoreCase("s-main")){
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();

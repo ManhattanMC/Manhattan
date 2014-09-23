@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -48,7 +49,7 @@ public class Listeners implements Listener{
     Block t = e.getClickedBlock();
     Player p = e.getPlayer();
     if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if(t.getType().equals(Material.ENDER_CHEST)&&DBmanager.Playerdats.get(p.getName()).world == 'c'){
+            if(t.getType().equals(Material.ENDER_CHEST)&&p.getWorld().getName().equalsIgnoreCase("c-main")){
                 p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
                 e.setCancelled(true);
             }
@@ -56,7 +57,6 @@ public class Listeners implements Listener{
     }
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e){
-        System.out.println("dmg");
         final Entity damager = e.getDamager();
         final Entity target = e.getEntity();
         if (damager instanceof Player && target instanceof Player){
@@ -107,6 +107,10 @@ public class Listeners implements Listener{
 //                }
             }
         }
+    }
+    @EventHandler
+    public void onWorldSave(WorldSaveEvent e){
+        DBmanager.SavePlayers();
     }
 //    @EventHandler
 //    public void onPlayerInteract(PlayerInteractEvent e){
