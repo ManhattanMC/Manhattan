@@ -87,6 +87,7 @@ public class Commands implements CommandExecutor{
                 DS.setLine(1, ChatColor.AQUA + "Death Games:");
                 DS.setLine(2, ChatColor.BLUE + DBmanager.DGtarget);
                 DS.update();
+                
                 return true;
             }
         }
@@ -120,6 +121,7 @@ public class Commands implements CommandExecutor{
                     mms.oldTargets.remove(player.getName());
                 }
 //                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "clear " + player.getName());
+                DBmanager.SavePlayer(player.getName());
                 return true;
             }
             if(args[0].equalsIgnoreCase("creative") && player.getLocation().getWorld().getName().equalsIgnoreCase("s-main")){
@@ -154,9 +156,10 @@ public class Commands implements CommandExecutor{
                 if(player.hasPermission("group.mod")||player.hasPermission("group.admin")){
                     player.addAttachment(mms.plugin, "voxelsniper.*", true);
                 }
+                DBmanager.SavePlayer(player.getName());
                 return true;
+                
             }
-            DBmanager.SavePlayer(player.getName());
         }
         return false;
     }

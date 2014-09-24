@@ -7,6 +7,7 @@
 package org.bvsd.manhattanplugin;
 
 import java.util.ArrayList;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,9 +24,9 @@ public class PlayerDat{
         
         public int money = 0;
         public ArrayList<Plot> land = new ArrayList<>();
-        public PlayerDat(char w, Location loc, ItemStack[] is, ItemStack[] is2){
+        public PlayerDat(char w, ItemStack[] is, ItemStack[] is2){
             world = w;
-            lastLoc = loc;
+            lastLoc=Bukkit.getWorld("S-Main").getSpawnLocation();
             mainInven = is;
             armorInven = is2;
         }

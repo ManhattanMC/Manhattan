@@ -19,7 +19,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,18 +30,11 @@ public class Listeners implements Listener{
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
-        if(!p.hasPlayedBefore()){
-            DBmanager.Playerdats.put(p.getName(), new PlayerDat('s', p.getLocation(), p.getInventory().getContents(), p.getInventory().getArmorContents()));
-        }else{
-            DBmanager.LoadPlayers(p.getName());
-        }
+        DBmanager.LoadPlayers(p.getName());
         if(mms.oldTargets.contains(p.getName())&&DBmanager.Playerdats.get(p.getName()).world != 'c'){
             p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
             mms.oldTargets.remove(p.getName());
         }
-    }
-    public void onPlayerQuit(PlayerQuitEvent e){
-        DBmanager.Playerdats.remove(e.getPlayer().getName());
     }
     @EventHandler
     public void blockChestInterract(PlayerInteractEvent e) {
@@ -112,14 +104,14 @@ public class Listeners implements Listener{
     public void onWorldSave(WorldSaveEvent e){
         DBmanager.SavePlayers();
     }
-//    @EventHandler
-//    public void onPlayerInteract(PlayerInteractEvent e){
-//        Block t = e.getClickedBlock();
-//        Player p = e.getPlayer();
-//        //no ender chest in creative
-//        if(t.getType().equals(Material.ENDER_CHEST)&&DBmanager.Playerdats.get(p.getName()).world == 'c'){
-//            p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
-//            e.setCancelled(true);
-//        }
-//    }
+    /*@EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e){
+        Block t = e.getClickedBlock();
+        Player p = e.getPlayer();
+        //no ender chest in creative
+        if(t.getType().equals(Material.ENDER_CHEST)&&p.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
+            p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
+            e.setCancelled(true);
+        }
+    }*/
 }
