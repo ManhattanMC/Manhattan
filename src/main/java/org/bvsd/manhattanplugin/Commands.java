@@ -6,6 +6,7 @@
 
 package org.bvsd.manhattanplugin;
 
+import java.util.Arrays;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,6 +19,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
@@ -55,6 +57,7 @@ public class Commands implements CommandExecutor{
                     player.sendMessage("You are already in the Death Games");
                 }else{
                     DBmanager.DGplayers.add(player.getName());
+                    player.sendMessage("You are now part of the deathgames");
                 }
                 return true;
             }else if(args[0].equalsIgnoreCase("leave")){
@@ -63,12 +66,20 @@ public class Commands implements CommandExecutor{
                 }else{
                     if(DBmanager.DGtarget.equalsIgnoreCase(player.getName())){
                         DBmanager.DGplayers.remove(player.getName());
+                        player.sendMessage("You are no longer in the deathgames");
                     }else{
                         player.sendMessage("You are the target, you cannot leave untill midnight!");
                     }
                 }
                 return true;
-            }else if(args[0].equalsIgnoreCase("target")){
+            }else if(args[0].equalsIgnoreCase("equip")&&player.isOp()){
+                ItemStack sword = new ItemStack(Material.IRON_SWORD);
+                ItemMeta smeta = sword.getItemMeta();
+                smeta.setDisplayName("DeathGames Sword");
+                smeta.setLore(Arrays.asList(new String[] {"For use in the DeathGames only!"}));
+                sword.setItemMeta(smeta);
+                player.getInventory().addItem(sword);
+            }else if(args[0].equalsIgnoreCase("target")&&player.isOp()){
                 player.sendMessage(DBmanager.DGtarget);
                 return true;
             }else if(args[0].equalsIgnoreCase("reroll")&&player.isOp()){

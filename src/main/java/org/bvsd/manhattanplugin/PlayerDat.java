@@ -21,7 +21,7 @@ public class PlayerDat{
         public ItemStack[] mainInven;
         public ItemStack[] armorInven;
         public boolean beenCreate = false;
-        
+//        public long DGwaiter = 0;
         public int money = 0;
         public ArrayList<Plot> land = new ArrayList<>();
         public PlayerDat(char w, ItemStack[] is, ItemStack[] is2){

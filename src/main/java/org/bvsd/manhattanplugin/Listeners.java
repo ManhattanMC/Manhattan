@@ -55,49 +55,58 @@ public class Listeners implements Listener{
         if (damager instanceof Player && target instanceof Player){
             Player att = (Player) damager;
             Player targ = (Player) target;
-            att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
-            e.setCancelled(true);
-//            if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-//                boolean inZone = false;
-//                for(HostileZone z:DBmanager.HZones){
-//                    if(z.inZone(att.getLocation())&&z.inZone(targ.getLocation())){
-//                        inZone=true;
-//                    }
-//                }
-//                if(!inZone){
-//                    att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
-//                    e.setCancelled(true);
-//                }
-//            }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-//                if(!DBmanager.DGplayers.contains(att.getName())){
-//                    att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
-//                    e.setCancelled(true);
-//                }
-//            }
+            if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+                att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+                e.setCancelled(true);
+            }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+                if(!DBmanager.DGplayers.contains(att.getName())){
+                    att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
+                    e.setCancelled(true);
+                }
+            }else{
+                if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                    att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
+                    att.sendMessage(ChatColor.RED + "Use /deathgames equip");
+                    e.setCancelled(true);
+                }
+            }
         }else if (damager instanceof Projectile && target instanceof Player){
             final LivingEntity shooter = ((Projectile)damager).getShooter();
             if (shooter instanceof Player){
                 Player att = (Player) shooter;
                 Player targ = (Player) target;
-                att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+                if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+                        att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+                        e.setCancelled(true);
+                }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+                    if(!DBmanager.DGplayers.contains(att.getName())){
+                        att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
+                        e.setCancelled(true);
+                    }
+                }else{
+                    if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                        att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
+                        att.sendMessage(ChatColor.RED + "Use /deathgames equip");
+                        e.setCancelled(true);
+                    }
+                }
+            }
+        }else if(damager instanceof Player){
+            Player att = (Player) damager;
+            if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                att.getItemInHand().setType(Material.AIR);
+                att.sendMessage(ChatColor.RED + "Deathgames only");
                 e.setCancelled(true);
-//                if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-//                    boolean inZone = false;
-//                    for(HostileZone z:DBmanager.HZones){
-//                        if(z.inZone(att.getLocation())&&z.inZone(targ.getLocation())){
-//                            inZone=true;
-//                        }
-//                    }
-//                    if(!inZone){
-//                        att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
-//                        e.setCancelled(true);
-//                    }
-//                }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-//                    if(!DBmanager.DGplayers.contains(att.getName())){
-//                        att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
-//                        e.setCancelled(true);
-//                    }
-//                }
+            }
+        }else if(damager instanceof Projectile){
+            final LivingEntity shooter = ((Projectile)damager).getShooter();
+            if(shooter instanceof Player){
+                Player att = (Player) damager;
+                if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                    att.getItemInHand().setType(Material.AIR);
+                    att.sendMessage(ChatColor.RED + "Deathgames only");
+                    e.setCancelled(true);
+                }
             }
         }
     }
