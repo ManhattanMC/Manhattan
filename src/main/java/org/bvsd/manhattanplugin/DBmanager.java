@@ -389,24 +389,55 @@ public class DBmanager {
     //with
     //player load
     public static void SaveDG(){
-        FileConfiguration configF = mms.plugin.getConfig();
-        configF.set("DeathGames.players", DGplayers);
-        configF.set("DeathGames.target", DGtarget);
-        //sign loc
-        configF.set("DeathGames.sign.Wname", DGsign.getWorld().getName());
-        configF.set("DeathGames.sign.X", DGsign.getBlockX());
-        configF.set("DeathGames.sign.Y", DGsign.getBlockY());
-        configF.set("DeathGames.sign.Z", DGsign.getBlockZ());
-        //
-        mms.plugin.saveConfig();
+        try {
+            FileWriter fr = new FileWriter(mms.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat");
+            try (PrintWriter writer = new PrintWriter(fr)) {
+                writer.println("Players:");
+                for(String s:DGplayers){
+                    writer.println(" - " + s);
+                }
+                writer.println("target: " + DGtarget);
+                //loc
+                writer.println("SignLoc:");
+                writer.println(" - Wname: " + DGsign.getWorld().getName());
+                writer.println(" - X: " + DGsign.getBlockX());
+                writer.println(" - Y: " + DGsign.getBlockY());
+                writer.println(" - Z: " + DGsign.getBlockZ());
+                //DG old targets save:
+                writer.close();
+            }
+            fr.close();
+        } catch (FileNotFoundException ex) {
+                Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            System.out.println("IO ERROR");
+        }
     }
     public static void LoadDG(){
-        FileConfiguration configF = mms.plugin.getConfig();
-        DGplayers = configF.getStringList("DeathGames.players");
-        DGtarget = configF.getString("DeathGames.target");
-        //sign loc
-        DGsign = new Location(Bukkit.getWorld(configF.getString("DeathGames.sign.Wname")), configF.getInt("DeathGames.sign.X"), configF.getInt("DeathGames.sign.Y"), configF.getInt("DeathGames.sign.Z"));
-        //
+        if(!new File(mms.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat").exists()){
+            DGplayers = new ArrayList<>();
+            DGtarget = "none";
+            DGsign = Bukkit.getWorld("S-Main").getSpawnLocation();
+            return;
+        }else{
+            try {
+                RandomAccessFile s = new RandomAccessFile(new File(mms.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), "rw");
+                String line = s.readLine();
+                line = s.readLine();
+                while(!line.contains("target: ")){
+                    DGplayers.add(line.replace(" - ", ""));
+                    line = s.readLine();
+                }
+                DGtarget = line.replace("target: ", "");
+                line = s.readLine();
+                DGsign =new Location(Bukkit.getWorld(s.readLine().replace(" - Wname: ", "")), Integer.parseInt(s.readLine().replace(" - X: ", "")), Integer.parseInt(s.readLine().replace(" - Y: ", "")), Integer.parseInt(s.readLine().replace(" - Z: ", "")));
+                //DG old targets load:
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     public static void SaveHZones(){
         FileConfiguration configF = mms.plugin.getConfig();

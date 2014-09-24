@@ -6,6 +6,7 @@
 
 package org.bvsd.manhattanplugin;
 
+import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -73,15 +74,28 @@ public class Commands implements CommandExecutor{
             }else if(args[0].equalsIgnoreCase("reroll")&&player.isOp()){
                 Bukkit.broadcastMessage("Selecting new DeathGames Target...");
                 if(Bukkit.getOfflinePlayer(DBmanager.DGtarget).isOnline()){
-                    if(DBmanager.Playerdats.get(DBmanager.DGtarget).world != 'c'){
+                    if(!Bukkit.getPlayer(DBmanager.DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                         Bukkit.getPlayer(DBmanager.DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                        mms.oldTargets.add(DBmanager.DGtarget);
+                                                if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
+                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
+                        }else{
+                            mms.oldTargets.put(DBmanager.DGtarget, 1);
+                        }
                     }
                 }else{
-                    mms.oldTargets.add(DBmanager.DGtarget);
+                                            if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
+                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
+                        }else{
+                            mms.oldTargets.put(DBmanager.DGtarget, 1);
+                        }
                 }
-                DBmanager.DGtarget = DBmanager.DGplayers.get((int) (Math.random() * (DBmanager.DGplayers.size()-1)));
+                Random gen = new Random();
+                String ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
+                while(ntar.equals(DBmanager.DGtarget)&&DBmanager.DGplayers.size()>1){
+                    ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
+                }
+                DBmanager.DGtarget = ntar;
                 DBmanager.DGsign.getBlock().setType(Material.SIGN_POST);
                 Sign DS = (Sign)DBmanager.DGsign.getBlock().getState();
                 DS.setLine(1, ChatColor.AQUA + "Death Games:");
@@ -92,10 +106,10 @@ public class Commands implements CommandExecutor{
             }
         }
         //WorldJump
-        if(cmd.getName().equalsIgnoreCase("worldjump") && args.length > 0){
+        if(cmd.getName().equalsIgnoreCase("worldjump")){
             PlayerDat pd = DBmanager.Playerdats.get(player.getName());
 //            player.sendMessage(String.valueOf(DBmanager.Playerdats));
-            if(args[0].equalsIgnoreCase("survival") && player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
+            if(player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();
@@ -116,15 +130,15 @@ public class Commands implements CommandExecutor{
                 }
                 player.setGameMode(GameMode.SURVIVAL);
                 DBmanager.Playerdats.put(player.getName(), new PlayerDat('s', oldloc, oldInven1, oldInven2, true));
-                if(mms.oldTargets.contains(player.getName())){
-                    player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
+                if(mms.oldTargets.containsKey(player.getName())&&!player.getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
+                    player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(player.getName())));
                     mms.oldTargets.remove(player.getName());
                 }
 //                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "clear " + player.getName());
                 DBmanager.SavePlayer(player.getName());
                 return true;
             }
-            if(args[0].equalsIgnoreCase("creative") && player.getLocation().getWorld().getName().equalsIgnoreCase("s-main")){
+            if(player.getLocation().getWorld().getName().equalsIgnoreCase("s-main")){
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();
@@ -151,7 +165,6 @@ public class Commands implements CommandExecutor{
                 pd.mainInven = oldInven1;
                 pd.armorInven = oldInven2;
                 pd.lastLoc = oldloc;
-                pd.world = 'c';
                 DBmanager.Playerdats.put(player.getName(), new PlayerDat('c', oldloc, oldInven1, oldInven2, true));
                 if(player.hasPermission("group.mod")||player.hasPermission("group.admin")){
                     player.addAttachment(mms.plugin, "voxelsniper.*", true);

@@ -6,6 +6,7 @@
 
 package org.bvsd.manhattanplugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,8 +32,8 @@ public class Listeners implements Listener{
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
         DBmanager.LoadPlayers(p.getName());
-        if(mms.oldTargets.contains(p.getName())&&DBmanager.Playerdats.get(p.getName()).world != 'c'){
-            p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
+        if(mms.oldTargets.containsKey(p.getName())&&!p.getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
+            p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(p.getName())));
             mms.oldTargets.remove(p.getName());
         }
     }

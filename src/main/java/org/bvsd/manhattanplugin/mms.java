@@ -9,7 +9,9 @@ package org.bvsd.manhattanplugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,7 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class mms extends JavaPlugin{
     public static mms plugin;
-    public static List<String> oldTargets = new ArrayList<>();
+    public static HashMap<String, Integer> oldTargets = new HashMap<>();
     @Override
     public void onEnable(){
         this.getConfig().options().copyDefaults(true);
@@ -35,41 +37,54 @@ public class mms extends JavaPlugin{
             }
         }
         getCommand("worldjump").setExecutor(new Commands());
-//        getCommand("deathgames").setExecutor(new Commands());
+        getCommand("deathgames").setExecutor(new Commands());
 //        getCommand("HZone").setExecutor(new Commands());
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new Listeners(), this);
         this.plugin = this;
         Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
         long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
-        /*DBmanager.LoadDG();
+        DBmanager.LoadDG();
         DBmanager.LoadHZones();
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
                 Bukkit.broadcastMessage("Selecting new DeathGames Target...");
                 if(Bukkit.getOfflinePlayer(DBmanager.DGtarget).isOnline()){
-                    if(DBmanager.Playerdats.get(DBmanager.DGtarget).world != 'c'){
+                    if(!Bukkit.getPlayer(DBmanager.DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                         Bukkit.getPlayer(DBmanager.DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                        mms.oldTargets.add(DBmanager.DGtarget);
+                        if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
+                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
+                        }else{
+                            mms.oldTargets.put(DBmanager.DGtarget, 1);
+                        }
                     }
                 }else{
-                    mms.oldTargets.add(DBmanager.DGtarget);
+                                            if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
+                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
+                        }else{
+                            mms.oldTargets.put(DBmanager.DGtarget, 1);
+                        }
                 }
-                DBmanager.DGtarget = DBmanager.DGplayers.get((int) (Math.random() * (DBmanager.DGplayers.size()-1)));
+                Random gen = new Random();
+                String ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
+                while(ntar.equals(DBmanager.DGtarget)&&DBmanager.DGplayers.size()>1){
+                    ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
+                }
+                DBmanager.DGtarget = ntar;
                 DBmanager.DGsign.getBlock().setType(Material.SIGN_POST);
                 Sign DS = (Sign)DBmanager.DGsign.getBlock().getState();
                 DS.setLine(1, ChatColor.AQUA + "Death Games:");
                 DS.setLine(2, ChatColor.BLUE + DBmanager.DGtarget);
                 DS.update();
             }
-        }, seconds*20, 24 * (60 * 60 * 20));*/
+        }, seconds*20, 24 * (60 * 60 * 20));
     }
     @Override
     public void onDisable(){
         DBmanager.SavePlayers();
-//        DBmanager.SaveDG();
+        DBmanager.SaveDG();
 //        DBmanager.SaveHZones();
     }
 }

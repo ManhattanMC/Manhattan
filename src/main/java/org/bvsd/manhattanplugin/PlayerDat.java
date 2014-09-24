@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
  * @author Donovan
  */
 public class PlayerDat{
-        public char world;
+//        public char world;
         public Location lastLoc;
         public ItemStack[] mainInven;
         public ItemStack[] armorInven;
@@ -25,13 +25,13 @@ public class PlayerDat{
         public int money = 0;
         public ArrayList<Plot> land = new ArrayList<>();
         public PlayerDat(char w, ItemStack[] is, ItemStack[] is2){
-            world = w;
+//            world = w;
             lastLoc=Bukkit.getWorld("S-Main").getSpawnLocation();
             mainInven = is;
             armorInven = is2;
         }
         public PlayerDat(char w, Location loc, ItemStack[] is, ItemStack[] is2, boolean beenC){
-            world = w;
+//            world = w;
             lastLoc = loc;
             mainInven = is;
             armorInven = is2;
