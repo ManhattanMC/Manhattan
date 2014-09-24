@@ -5,7 +5,6 @@ Manhattan Middle School plugin
 
 Development goals and progress:
 
-## Need to rework DataBase management to work in Java file I/O 
 
 ### Sky Islands:
 There will be a building contest held from October 5th to 19th. The top ten islands selected by my self and the other staff will be used on the survival server for pvp. Make sure that your islands are pvp ready :D
@@ -16,7 +15,7 @@ There will be no ‘pvp world’ however there will be pvp locations around the 
 ### Death Games: _(Started, on hold for DB)_
 Every 24 hours a player will be selected as the Death Games target. Only players entered to be selected may take part in the killing. For the day, target will have access to PVP and the killers will have access to kill them. At the end of the day the target will get a certain prize!
 
-### Building world: _(Completed 9/12/14)_
+### Building world: _(Completed 9/23/14)_
 There is a creative map for players to build on. When they enter or leave worlds their inventories and locations are saves for when they want to return. items cannot be moved between worlds. Moderators and myself will be able to use VoxelSniper in the creative world. If you see one of us on, feel free to ask for some help!
 
 ### Minigames: 
