@@ -6,8 +6,8 @@
 
 package org.bvsd.manhattanplugin;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.WorldSaveEvent;
@@ -46,6 +47,15 @@ public class Listeners implements Listener{
                 p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
                 e.setCancelled(true);
             }
+        }
+    }
+    @EventHandler
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent e){
+        Player p = e.getPlayer();
+        if(p.getWorld().getName().equalsIgnoreCase("C-Main")){
+            p.setGameMode(GameMode.CREATIVE);
+        }else{
+            p.setGameMode(GameMode.SURVIVAL);
         }
     }
     @EventHandler
@@ -91,24 +101,25 @@ public class Listeners implements Listener{
                     }
                 }
             }
-        }else if(damager instanceof Player){
-            Player att = (Player) damager;
-            if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-                att.getItemInHand().setType(Material.AIR);
-                att.sendMessage(ChatColor.RED + "Deathgames only");
-                e.setCancelled(true);
-            }
-        }else if(damager instanceof Projectile){
-            final LivingEntity shooter = ((Projectile)damager).getShooter();
-            if(shooter instanceof Player){
-                Player att = (Player) damager;
-                if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-                    att.getItemInHand().setType(Material.AIR);
-                    att.sendMessage(ChatColor.RED + "Deathgames only");
-                    e.setCancelled(true);
-                }
-            }
         }
+//        else if(damager instanceof Player){
+//            Player att = (Player) damager;
+//            if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+//                att.getItemInHand().setType(Material.AIR);
+//                att.sendMessage(ChatColor.RED + "Deathgames only");
+//                e.setCancelled(true);
+//            }
+//        }else if(damager instanceof Projectile){
+//            final LivingEntity shooter = ((Projectile)damager).getShooter();
+//            if(shooter instanceof Player){
+//                Player att = (Player) damager;
+//                if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+//                    att.getItemInHand().setType(Material.AIR);
+//                    att.sendMessage(ChatColor.RED + "Deathgames only");
+//                    e.setCancelled(true);
+//                }
+//            }
+//        }
     }
     @EventHandler
     public void onWorldSave(WorldSaveEvent e){

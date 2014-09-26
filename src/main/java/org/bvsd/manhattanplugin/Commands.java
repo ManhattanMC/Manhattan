@@ -124,7 +124,10 @@ public class Commands implements CommandExecutor{
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();
-                player.teleport(pd.lastLoc);
+                if(!pd.lastLoc.getWorld().getName().contains("C-"))
+                    player.teleport(pd.lastLoc);
+                else
+                    player.teleport(Bukkit.getWorld("S-Main").getSpawnLocation());
                 player.getInventory().clear();
                 player.getInventory().setContents(pd.mainInven);
                 player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR),new ItemStack(Material.AIR),new ItemStack(Material.AIR),new ItemStack(Material.AIR)});
@@ -139,7 +142,7 @@ public class Commands implements CommandExecutor{
                         player.getInventory().setBoots(is);
                     }
                 }
-                player.setGameMode(GameMode.SURVIVAL);
+//                player.setGameMode(GameMode.SURVIVAL);
                 DBmanager.Playerdats.put(player.getName(), new PlayerDat('s', oldloc, oldInven1, oldInven2, true));
                 if(mms.oldTargets.containsKey(player.getName())&&!player.getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                     player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(player.getName())));
@@ -153,12 +156,10 @@ public class Commands implements CommandExecutor{
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();
-                if(pd.beenCreate){
+                if(!pd.lastLoc.getWorld().getName().contains("S-"))
                     player.teleport(pd.lastLoc);
-                }else{
+                else
                     player.teleport(Bukkit.getWorld("C-Main").getSpawnLocation());
-                    pd.beenCreate = true;
-                }
                 player.getInventory().clear();
                 player.getInventory().setContents(pd.mainInven);
                 for(ItemStack is : pd.armorInven){
@@ -172,7 +173,7 @@ public class Commands implements CommandExecutor{
                         player.getInventory().setBoots(is);
                     }
                 }
-                player.setGameMode(GameMode.CREATIVE);
+//                player.setGameMode(GameMode.CREATIVE);
                 pd.mainInven = oldInven1;
                 pd.armorInven = oldInven2;
                 pd.lastLoc = oldloc;

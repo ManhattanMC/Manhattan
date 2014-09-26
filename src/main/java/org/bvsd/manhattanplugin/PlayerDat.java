@@ -26,7 +26,7 @@ public class PlayerDat{
         public ArrayList<Plot> land = new ArrayList<>();
         public PlayerDat(char w, ItemStack[] is, ItemStack[] is2){
 //            world = w;
-            lastLoc=Bukkit.getWorld("S-Main").getSpawnLocation();
+            lastLoc=Bukkit.getWorld("C-Main").getSpawnLocation();
             mainInven = is;
             armorInven = is2;
         }
