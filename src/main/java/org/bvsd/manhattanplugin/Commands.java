@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -20,6 +19,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  *
@@ -33,6 +34,16 @@ public class Commands implements CommandExecutor{
             return true;
         }
         Player player = (Player) cs;
+        //Vanish
+        if(cmd.getName().equalsIgnoreCase("vanish")){
+            if(!DBmanager.vanished.contains(player.getName())){
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
+                DBmanager.vanished.add(player.getName());
+            }else{
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            }
+        }
+        
         //hostile Areas
         if(cmd.getName().equalsIgnoreCase("HZone")){
             if(args.length > 0){
@@ -79,6 +90,7 @@ public class Commands implements CommandExecutor{
                 smeta.setLore(Arrays.asList(new String[] {"For use in the DeathGames only!"}));
                 sword.setItemMeta(smeta);
                 player.getInventory().addItem(sword);
+                return true;
             }else if(args[0].equalsIgnoreCase("target")&&player.isOp()){
                 player.sendMessage(DBmanager.DGtarget);
                 return true;
@@ -148,7 +160,6 @@ public class Commands implements CommandExecutor{
                     player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(player.getName())));
                     mms.oldTargets.remove(player.getName());
                 }
-//                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "clear " + player.getName());
                 DBmanager.SavePlayer(player.getName());
                 return true;
             }

@@ -21,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,6 +40,13 @@ public class Listeners implements Listener{
         }
     }
     @EventHandler
+    public void onPlayerPickupItem(PlayerPickupItemEvent e){
+        Player p = e.getPlayer();
+        if(DBmanager.vanished.contains(p.getName())){
+            e.setCancelled(true);
+        }
+    }
+    @EventHandler
     public void blockChestInterract(PlayerInteractEvent e) {
     Block t = e.getClickedBlock();
     Player p = e.getPlayer();
@@ -52,10 +60,12 @@ public class Listeners implements Listener{
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
-        if(p.getWorld().getName().equalsIgnoreCase("C-Main")){
-            p.setGameMode(GameMode.CREATIVE);
-        }else{
-            p.setGameMode(GameMode.SURVIVAL);
+        if(!p.isOp()){
+            if(p.getWorld().getName().equalsIgnoreCase("C-Main")){
+                p.setGameMode(GameMode.CREATIVE);
+            }else{
+                p.setGameMode(GameMode.SURVIVAL);
+            }
         }
     }
     @EventHandler
@@ -66,18 +76,18 @@ public class Listeners implements Listener{
             Player att = (Player) damager;
             Player targ = (Player) target;
             if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-                att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
+                att.sendMessage(ChatColor.RED + "You are in a no pvp zone".toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString());
                 e.setCancelled(true);
             }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
                 if(!DBmanager.DGplayers.contains(att.getName())){
                     att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
                     e.setCancelled(true);
-                }
-            }else{
-                if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-                    att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
-                    att.sendMessage(ChatColor.RED + "Use /deathgames equip");
-                    e.setCancelled(true);
+                }else if(att.getItemInHand().hasItemMeta()){
+                    if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                        att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
+                        att.sendMessage(ChatColor.RED + "Use /deathgames equip");
+                        e.setCancelled(true);
+                    }
                 }
             }
         }else if (damager instanceof Projectile && target instanceof Player){
@@ -92,34 +102,37 @@ public class Listeners implements Listener{
                     if(!DBmanager.DGplayers.contains(att.getName())){
                         att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
                         e.setCancelled(true);
+                    }else if(att.getItemInHand().hasItemMeta()){
+                        if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                            att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
+                            att.sendMessage(ChatColor.RED + "Use /deathgames equip");
+                            e.setCancelled(true);
+                        }
                     }
-                }else{
-                    if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-                        att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
-                        att.sendMessage(ChatColor.RED + "Use /deathgames equip");
+                }
+            }
+        }else if(damager instanceof Player){
+            Player att = (Player) damager;
+            if(att.getItemInHand().hasItemMeta()){
+                if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                    att.getInventory().removeItem(att.getItemInHand());
+                    att.sendMessage(ChatColor.RED + "Deathgames only");
+                    e.setCancelled(true);
+                }
+            }
+        }else if(damager instanceof Projectile){
+            final LivingEntity shooter = ((Projectile)damager).getShooter();
+            if(shooter instanceof Player){
+                Player att = (Player) damager;
+                if(att.getItemInHand().hasItemMeta()){
+                    if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                        att.getInventory().removeItem(att.getItemInHand());
+                        att.sendMessage(ChatColor.RED + "Deathgames only");
                         e.setCancelled(true);
                     }
                 }
             }
         }
-//        else if(damager instanceof Player){
-//            Player att = (Player) damager;
-//            if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-//                att.getItemInHand().setType(Material.AIR);
-//                att.sendMessage(ChatColor.RED + "Deathgames only");
-//                e.setCancelled(true);
-//            }
-//        }else if(damager instanceof Projectile){
-//            final LivingEntity shooter = ((Projectile)damager).getShooter();
-//            if(shooter instanceof Player){
-//                Player att = (Player) damager;
-//                if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-//                    att.getItemInHand().setType(Material.AIR);
-//                    att.sendMessage(ChatColor.RED + "Deathgames only");
-//                    e.setCancelled(true);
-//                }
-//            }
-//        }
     }
     @EventHandler
     public void onWorldSave(WorldSaveEvent e){

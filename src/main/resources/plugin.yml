@@ -9,10 +9,12 @@ commands:
     usage: /WorldJump <survival | creative>
   DeathGames:
     description: enter or leave the deathgames
-    usage: /DeathGames <join | leave>
+    usage: /DeathGames <join | leave | equip>
   HZone:
     description: create or remove a hostile zone
     usage: |
            /HZone add [radius] [difficulty]
            /HZone remove
-  
+  Vanish:
+    description: become invisible
+    usage: /vanish

@@ -38,6 +38,7 @@ public class mms extends JavaPlugin{
         }
         getCommand("worldjump").setExecutor(new Commands());
         getCommand("deathgames").setExecutor(new Commands());
+        getCommand("vanish").setExecutor(new Commands());
 //        getCommand("HZone").setExecutor(new Commands());
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new Listeners(), this);
@@ -80,6 +81,7 @@ public class mms extends JavaPlugin{
                 DS.update();
             }
         }, seconds*20, 24 * (60 * 60 * 20));
+        DBmanager.vanished.add("none");
     }
     @Override
     public void onDisable(){

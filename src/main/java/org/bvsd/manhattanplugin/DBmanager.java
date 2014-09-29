@@ -42,6 +42,8 @@ public class DBmanager {
     public static List<HostileZone> HZones = new ArrayList<>();
     
     public static File PSF = new File(mms.plugin.getDataFolder() + System.getProperty("file.separator") + "PlayerSaves");
+    
+    public static ArrayList<String> vanished = new ArrayList<>();
 
     public static void SavePlayers(){
         if(!PSF.exists()){
