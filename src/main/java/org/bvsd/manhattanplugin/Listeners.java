@@ -64,6 +64,9 @@ public class Listeners implements Listener{
             if(p.getWorld().getName().equalsIgnoreCase("C-Main")){
                 p.setGameMode(GameMode.CREATIVE);
             }else{
+                if(e.getFrom().getName().equalsIgnoreCase("C-Main")){
+                    p.getInventory().clear();
+                }
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }

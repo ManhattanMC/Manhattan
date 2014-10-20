@@ -6,6 +6,7 @@
 
 package org.bvsd.manhattanplugin;
 
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -31,7 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  * @author Donovan
  */
 public class DBmanager {
-    public static HashMap<String, PlayerDat> Playerdats = new HashMap<>();
+    public static HashMap<String, PlayerSaveData> Playerdats = new HashMap<>();
     
     public static List<String> DGplayers = new ArrayList<>();
     
@@ -382,9 +383,9 @@ public class DBmanager {
             isl1.toArray(inven1); // fill the array
             ItemStack[] inven2 = new ItemStack[isl2.size()];
             isl2.toArray(inven2); // fill the array
-            Playerdats.put(pName, new PlayerDat(wrld, oldLoc, inven2, inven1, bc));
+            Playerdats.put(pName, new PlayerSaveData(wrld, oldLoc, inven2, inven1, bc));
         }else{
-            Playerdats.put(pName, new PlayerDat('s', new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)}));
+            Playerdats.put(pName, new PlayerSaveData('s', new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)}));
         }
     }
     ///Done

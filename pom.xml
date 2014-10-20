@@ -30,5 +30,17 @@
          <version>1.7.2-R0.1</version>
          <scope>compile</scope>
      </dependency>
+      <dependency>
+         <groupId>org.projectlombok</groupId>
+         <artifactId>lombok</artifactId>
+         <version>1.12.2</version>
+         <type>jar</type>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-core-asl</artifactId>
+         <version>1.9.13</version>
+         <type>jar</type>
+      </dependency>
    </dependencies>
 </project>

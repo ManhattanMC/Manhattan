@@ -6,6 +6,7 @@
 
 package org.bvsd.manhattanplugin;
 
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
 import java.util.Arrays;
 import java.util.Random;
 import org.bukkit.Bukkit;
@@ -35,13 +36,15 @@ public class Commands implements CommandExecutor{
         }
         Player player = (Player) cs;
         //Vanish
-        if(cmd.getName().equalsIgnoreCase("vanish")){
+        if(cmd.getName().equalsIgnoreCase("vanish")&&player.isOp()){
             if(!DBmanager.vanished.contains(player.getName())){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000, 0, false));
                 DBmanager.vanished.add(player.getName());
             }else{
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                DBmanager.vanished.remove(player.getName());
             }
+            return true;
         }
         
         //hostile Areas
@@ -130,7 +133,7 @@ public class Commands implements CommandExecutor{
         }
         //WorldJump
         if(cmd.getName().equalsIgnoreCase("worldjump")){
-            PlayerDat pd = DBmanager.Playerdats.get(player.getName());
+            PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
 //            player.sendMessage(String.valueOf(DBmanager.Playerdats));
             if(player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
                 Location oldloc = player.getLocation();
@@ -155,7 +158,7 @@ public class Commands implements CommandExecutor{
                     }
                 }
 //                player.setGameMode(GameMode.SURVIVAL);
-                DBmanager.Playerdats.put(player.getName(), new PlayerDat('s', oldloc, oldInven1, oldInven2, true));
+                DBmanager.Playerdats.put(player.getName(), new PlayerSaveData('s', oldloc, oldInven1, oldInven2, true));
                 if(mms.oldTargets.containsKey(player.getName())&&!player.getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                     player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(player.getName())));
                     mms.oldTargets.remove(player.getName());
@@ -188,7 +191,7 @@ public class Commands implements CommandExecutor{
                 pd.mainInven = oldInven1;
                 pd.armorInven = oldInven2;
                 pd.lastLoc = oldloc;
-                DBmanager.Playerdats.put(player.getName(), new PlayerDat('c', oldloc, oldInven1, oldInven2, true));
+                DBmanager.Playerdats.put(player.getName(), new PlayerSaveData('c', oldloc, oldInven1, oldInven2, true));
                 if(player.hasPermission("group.mod")||player.hasPermission("group.admin")){
                     player.addAttachment(mms.plugin, "voxelsniper.*", true);
                 }
