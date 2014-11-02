@@ -20,6 +20,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 
 /**
  *
@@ -28,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class mms extends JavaPlugin{
     public static mms plugin;
     public static HashMap<String, Integer> oldTargets = new HashMap<>();
+    public static ObjectMapper JSon = new ObjectMapper();//.configure(SerializationConfig.Feature.INDENT_OUTPUT, false);
     @Override
     public void onEnable(){
         this.getConfig().options().copyDefaults(true);

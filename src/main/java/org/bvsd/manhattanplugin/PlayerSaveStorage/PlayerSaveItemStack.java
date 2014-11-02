@@ -20,11 +20,15 @@
 package org.bvsd.manhattanplugin.PlayerSaveStorage;
 
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 /**
@@ -32,29 +36,21 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
  * @author Donovan
  */
 public class PlayerSaveItemStack {
-    @Getter
-    @Setter
+    @Getter @Setter
     private String material;
-    @Getter
-    @Setter
+    @Getter @Setter
     private int amount;
-    @Getter
-    @Setter
+    @Getter @Setter
     private String displayName;
-    @Getter
-    @Setter
+    @Getter @Setter
     private short durability;
-    @Getter
-    @Setter
+    @Getter @Setter
     private List<String> lore;
-    @Getter
-    @Setter
+    @Getter @Setter
     private PlayerSaveBookMeta bookMeta;
-    @Getter
-    @Setter
+    @Getter @Setter
     private PlayerSaveLeatherArmorMeta armorMeta;
-    @Getter
-    @Setter
+    @Getter @Setter
     private PlayerSaveEnchantmentMeta enchantmentMeta;
 
     public PlayerSaveItemStack(ItemStack i) {
@@ -87,7 +83,46 @@ public class PlayerSaveItemStack {
     public PlayerSaveItemStack(){
         
     }
-    public ItemStack ToItemStack(){
-        return null;
+    public ItemStack toItemStack() {
+        ItemStack out = new ItemStack(Material.valueOf(material));
+        out.setAmount(amount);
+        out.setDurability(durability);
+        if (displayName != null || lore != null) {
+            ItemMeta meta = out.getItemMeta();
+            if (lore != null) {
+                meta.setLore(lore);
+            }
+            if (displayName != null) {
+                meta.setDisplayName(displayName);
+            }
+            out.setItemMeta(meta);
+        }
+        if (bookMeta != null) {
+            BookMeta meta = (BookMeta) out.getItemMeta();
+            meta.setAuthor(bookMeta.getTitle());
+            meta.setPages(bookMeta.getPages());
+            meta.setTitle(bookMeta.getTitle());
+            if (bookMeta.getLore() != null) {
+                meta.setLore(bookMeta.getLore());
+            }
+            out.setItemMeta(meta);
+        }
+        if (armorMeta != null) {
+            LeatherArmorMeta meta = (LeatherArmorMeta) out.getItemMeta();
+            meta.setColor(Color.fromRGB(armorMeta.getRgb()));
+            if (armorMeta.getDisplayName() != null) {
+                meta.setDisplayName(armorMeta.getDisplayName());
+            }
+            if (armorMeta.getLore() != null) {
+                meta.setLore(armorMeta.getLore());
+            }
+            out.setItemMeta(meta);
+        }
+        if (enchantmentMeta != null) {
+            for (Map.Entry<String, Integer> entry : enchantmentMeta.getEnchants().entrySet()) {
+                out.addUnsafeEnchantment(Enchantment.getByName(entry.getKey()), entry.getValue());
+            }
+        }
+        return out;
     }
 }

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,79 +52,20 @@ public class DBmanager {
             PSF.mkdirs();
         }
         for(String name:Playerdats.keySet()){
+            boolean successful = true;
+            File NLoc = new File(PSF + name + ".playersave.new");
+            File OLoc = new File(PSF + name + ".playersave");
             try {
-                FileWriter fr = new FileWriter(PSF.toString() + System.getProperty("file.separator") + name + ".playerdat");
-                try (PrintWriter writer = new PrintWriter(fr)) {
-                    writer.println("Armor:");
-                    for(ItemStack iss:Playerdats.get(name).armorInven){
-                        writer.println(" - ArmorItemStack:");
-                        writer.println("   - type: " + iss.getType().name());
-                        writer.println("   - number: " + iss.getAmount());
-                        writer.println("   - durab: " + iss.getDurability());
-                        if(iss.hasItemMeta()){
-                            ItemMeta ism = iss.getItemMeta();
-                            if(ism.hasDisplayName()){
-                                writer.println("   - name: " + ism.getDisplayName());
-                            }
-                            if(ism.hasLore()){
-                                writer.println("     - lore:");
-                                for(String l : ism.getLore()){
-                                    writer.println("       - " + l);
-                                }
-                            }
-                            if(ism.hasEnchants()){
-                                writer.println("     - enchants:");
-                                for(Enchantment e:ism.getEnchants().keySet()){
-                                    writer.println("       - name: " + e.getName());
-                                    writer.println("       - lvl: " + ism.getEnchantLevel(e));
-                                }
-                            }
-                        }
+                mms.JSon.writeValue(NLoc, Playerdats.get(name));
+            } catch (IOException ex) {
+                successful = false;
+            } finally {
+                if (successful) {
+                    if (OLoc.exists()) {
+                        OLoc.delete();
                     }
-
-                    writer.println("Main:");
-                    for(ItemStack iss:Playerdats.get(name).mainInven){
-                        writer.println(" - MainItemStack:");
-                        if(iss != null){
-                            writer.println("   - type: " + iss.getType().name());
-                            writer.println("   - number: " + iss.getAmount());
-                            writer.println("   - durab: " + iss.getDurability());
-                            if(iss.hasItemMeta()){
-                                ItemMeta ism = iss.getItemMeta();
-                                if(ism.hasDisplayName()){
-                                    writer.println("   - name: " + ism.getDisplayName());
-                                }
-                                if(ism.hasLore()){
-                                    writer.println("     - lore:");
-                                    for(String l : ism.getLore()){
-                                        writer.println("       - " + l);
-                                    }
-                                }
-                                if(ism.hasEnchants()){
-                                    writer.println("     - enchants:");
-                                    for(Enchantment e:ism.getEnchants().keySet()){
-                                        writer.println("       - name: " + e.getName());
-                                        writer.println("       - lvl: " + ism.getEnchantLevel(e));
-                                    }
-                                }
-                            }
-                        }else{
-                            writer.println("   - nil");
-                        }
-                    }
-
-                    writer.println("OldLoc:");
-                    writer.println(" - Wname: " + Playerdats.get(name).lastLoc.getWorld().getName());
-                    writer.println(" - X: " + Playerdats.get(name).lastLoc.getBlockX());
-                    writer.println(" - Y: " + Playerdats.get(name).lastLoc.getBlockY());
-                    writer.println(" - Z: " + Playerdats.get(name).lastLoc.getBlockZ());
-
-                    writer.println("beenC: " + Playerdats.get(name).beenCreate);
-                    writer.close();
+                    NLoc.renameTo(OLoc);
                 }
-                fr.close();
-            }catch (IOException ex) {
-                Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -131,259 +73,33 @@ public class DBmanager {
         if(!PSF.exists()){
             PSF.mkdirs();
         }
-        try {
-            FileWriter fr = new FileWriter(PSF.toString() + System.getProperty("file.separator") + name + ".playerdat");
-            try (PrintWriter writer = new PrintWriter(fr)) {
-                writer.println("Armor:");
-                for(ItemStack iss:Playerdats.get(name).armorInven){
-                    writer.println(" - ArmorItemStack:");
-                    writer.println("   - type: " + iss.getType().name());
-                    writer.println("   - number: " + iss.getAmount());
-                    writer.println("   - durab: " + iss.getDurability());
-                    if(iss.hasItemMeta()){
-                        ItemMeta ism = iss.getItemMeta();
-                        if(ism.hasDisplayName()){
-                            writer.println("   - name: " + ism.getDisplayName());
-                        }
-                        if(ism.hasLore()){
-                            writer.println("     - lore:");
-                            for(String l : ism.getLore()){
-                                writer.println("       - " + l);
-                            }
-                        }
-                        if(ism.hasEnchants()){
-                            writer.println("     - enchants:");
-                            for(Enchantment e:ism.getEnchants().keySet()){
-                                writer.println("       - name: " + e.getName());
-                                writer.println("       - lvl: " + ism.getEnchantLevel(e));
-                            }
-                        }
+        boolean successful = true;
+            File NLoc = new File(PSF + name + ".playersave.new");
+            File OLoc = new File(PSF + name + ".playersave");
+            try {
+                mms.JSon.writeValue(NLoc, Playerdats.get(name));
+            } catch (IOException ex) {
+                successful = false;
+            } finally {
+                if (successful) {
+                    if (OLoc.exists()) {
+                        OLoc.delete();
                     }
+                    NLoc.renameTo(OLoc);
                 }
-
-                writer.println("Main:");
-                for(ItemStack iss:Playerdats.get(name).mainInven){
-                    writer.println(" - MainItemStack:");
-                    if(iss != null){
-                        writer.println("   - type: " + iss.getType().name());
-                        writer.println("   - number: " + iss.getAmount());
-                        writer.println("   - durab: " + iss.getDurability());
-                        if(iss.hasItemMeta()){
-                            ItemMeta ism = iss.getItemMeta();
-                            if(ism.hasDisplayName()){
-                                writer.println("   - name: " + ism.getDisplayName());
-                            }
-                            if(ism.hasLore()){
-                                writer.println("     - lore:");
-                                for(String l : ism.getLore()){
-                                    writer.println("       - " + l);
-                                }
-                            }
-                            if(ism.hasEnchants()){
-                                writer.println("     - enchants:");
-                                for(Enchantment e:ism.getEnchants().keySet()){
-                                    writer.println("       - name: " + e.getName());
-                                    writer.println("       - lvl: " + ism.getEnchantLevel(e));
-                                }
-                            }
-                        }
-                    }else{
-                        writer.println("   - nil");
-                    }
-                }
-
-                writer.println("OldLoc:");
-                writer.println(" - Wname: " + Playerdats.get(name).lastLoc.getWorld().getName());
-                writer.println(" - X: " + Playerdats.get(name).lastLoc.getBlockX());
-                writer.println(" - Y: " + Playerdats.get(name).lastLoc.getBlockY());
-                writer.println(" - Z: " + Playerdats.get(name).lastLoc.getBlockZ());
-
-                writer.println("beenC: " + Playerdats.get(name).beenCreate);
-                writer.close();
             }
-            fr.close();
-        }catch (IOException ex) {
-            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     public static void LoadPlayers(String pName){
         if(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat").exists()){
-            char wrld = ' ';
-            boolean bc = true;
-            Location oldLoc = null;
-            ArrayList<ItemStack> isl1 = new ArrayList<>();
-            ArrayList<ItemStack> isl2 = new ArrayList<>();
+            PlayerSaveData pd = null;
             try {
-                RandomAccessFile s = new RandomAccessFile(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"), "rw");
-    //            Scanner s = new Scanner(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"));
-                while(s.getFilePointer() < s.length()){
-                    String type = s.readLine();
-                    if(type.equalsIgnoreCase("armor:")){
-                        long lh = s.getFilePointer();
-                        String h1 = s.readLine();
-                        while(h1.equalsIgnoreCase(" - ArmorItemStack:")){
-                            String h2 = s.readLine();
-                            String name = "-1";
-                            String durab = "-1";
-                            String num = "";
-                            String typ  = "";
-                            boolean hasMeta = false;
-                            boolean isNil = false;
-                            List<String> lore;
-                            lore = new ArrayList<>();
-                            Map<Enchantment, Integer> ench;
-                            ench = new HashMap<>();
-                            if(h2.equalsIgnoreCase("   - nil")){
-                                isNil = true;
-                            }else{
-                                typ = h2.replace("   - type: ","");
-                                num = s.readLine().replace("   - number: ", "");
-                                lh = s.getFilePointer();
-                                String ha = s.readLine();
-                                if(ha.contains("   - durab: ")){
-                                    durab = ha.replace("   - durab: ", "");
-                                    lh = s.getFilePointer();
-                                }else{
-                                    s.seek(lh);
-                                }
-                                lore = new ArrayList<>();
-                                ench = new HashMap<>();
-                                h2 = s.readLine();
-                                while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
-
-                                    if(h2.equalsIgnoreCase("   - name: ")){
-                                        hasMeta = true;
-                                        name = h2.replace("   - name: ", "");
-                                    }else if(h2.equalsIgnoreCase("     - lore:")){
-                                        hasMeta = true;
-                                        String l1 = s.readLine();
-                                        while(l1.contains("       - ")){
-                                            lore.add(l1.replace("       - ", ""));
-                                            lh = s.getFilePointer();
-                                            l1 = s.readLine();
-                                        }
-                                        s.seek(lh);
-                                    }else if(h2.equalsIgnoreCase("     - enchants:")){
-                                        hasMeta = true;
-                                        String enchtyp = s.readLine().replace("       - name: ", "");
-                                        int enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
-                                        ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                        lh = s.getFilePointer();
-                                        String h3 = s.readLine();
-                                        while(h3.contains("       - name: ")){
-                                            enchtyp = h3.replace("       - name: ", "");
-                                            enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
-                                            ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                            lh = s.getFilePointer();
-                                            h3 = s.readLine();
-                                        }
-                                        s.seek(lh);
-                                    }
-                                    lh = s.getFilePointer();
-                                    h2 = s.readLine();
-                                }
-                                s.seek(lh);
-                            }
-                            if(!isNil){
-                                isl1.add(DBmanager.mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
-                            }else{
-                                isl1.add(null);
-                            }
-                           h1 = s.readLine();
-                        }
-                        s.seek(lh);
-                    }else if(type.equalsIgnoreCase("main:")){
-                        long lh = s.getFilePointer();
-                        String h1 = s.readLine();
-                        while(h1.equalsIgnoreCase(" - MainItemStack:")){
-
-                            String h2 = s.readLine();
-                            String name = "-1";
-                            String durab = "-1";
-                            String num = "";
-                            String typ  = "";
-                            boolean hasMeta = false;
-                            boolean isNil = false;
-                            List<String> lore;
-                            lore = new ArrayList<>();
-                            Map<Enchantment, Integer> ench;
-                            ench = new HashMap<>();
-                            if(h2.equalsIgnoreCase("   - nil")){
-                                isNil = true;
-                            }else{
-                                typ = h2.replace("   - type: ","");
-                                num = s.readLine().replace("   - number: ", "");
-                                lh = s.getFilePointer();
-                                String ha = s.readLine();
-                                if(ha.contains("   - durab: ")){
-                                    durab = ha.replace("   - durab: ", "");
-                                    lh = s.getFilePointer();
-                                }else{
-                                    s.seek(lh);
-                                }
-                                lore = new ArrayList<>();
-                                ench = new HashMap<>();
-                                h2 = s.readLine();
-                                while(h2.equalsIgnoreCase("   - name: ")||h2.equalsIgnoreCase("     - lore:")||h2.equalsIgnoreCase("     - enchants:")){
-                                    if(h2.equalsIgnoreCase("   - name: ")){
-                                        hasMeta = true;
-                                        name = h2.replace("   - name: ", "");
-                                    }else if(h2.equalsIgnoreCase("     - lore:")){
-                                        hasMeta = true;
-                                        String l1 = s.readLine();
-                                        while(l1.contains("       - ")){
-                                            lore.add(l1.replace("       - ", ""));
-                                            lh = s.getFilePointer();
-                                            l1 = s.readLine();
-                                        }
-                                        s.seek(lh);
-                                    }else if(h2.equalsIgnoreCase("     - enchants:")){
-                                        hasMeta = true;
-                                        String enchtyp = s.readLine().replace("       - name: ", "");
-                                        int enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
-                                        ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                        lh = s.getFilePointer();
-                                        String h3 = s.readLine();
-                                        while(h3.contains("       - name: ")){
-                                            enchtyp = h3.replace("       - name: ", "");
-                                            enchlvl = Integer.parseInt(s.readLine().replace("       - lvl: ", ""));
-                                            ench.put(Enchantment.getByName(enchtyp), enchlvl);
-                                            lh = s.getFilePointer();
-                                            h3 = s.readLine();
-                                        }
-                                        s.seek(lh);
-                                    }
-                                    lh = s.getFilePointer();
-                                    h2 = s.readLine();
-                                }
-                                s.seek(lh);
-                            }
-                            if(!isNil){
-                                isl2.add(DBmanager.mkIs(name, lore, Material.getMaterial(typ), Short.valueOf(durab), ench, Integer.parseInt(num), hasMeta));
-                            }else{
-                                isl2.add(null);
-                            }
-                           h1 = s.readLine();
-                        }
-                        s.seek(lh);
-                    }else if(type.equalsIgnoreCase("oldloc:")){
-                        oldLoc = new Location(Bukkit.getWorld(s.readLine().replace(" - Wname: ", "")), Integer.parseInt(s.readLine().replace(" - X: ", "")), Integer.parseInt(s.readLine().replace(" - Y: ", "")), Integer.parseInt(s.readLine().replace(" - Z: ", "")));
-                    }else if(type.contains("beenC: ")){
-                        bc = Boolean.valueOf(type.replace("beenC: ", ""));
-                    }
-                }
-                s.close();
-                s=null;
+                pd = mms.JSon.readValue(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"), PlayerSaveData.class);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 System.out.println("IO ERROR");
             }
-            ItemStack[] inven1 = new ItemStack[isl1.size()];
-            isl1.toArray(inven1); // fill the array
-            ItemStack[] inven2 = new ItemStack[isl2.size()];
-            isl2.toArray(inven2); // fill the array
-            Playerdats.put(pName, new PlayerSaveData(wrld, oldLoc, inven2, inven1, bc));
+            Playerdats.put(pName, pd);
         }else{
             Playerdats.put(pName, new PlayerSaveData('s', new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)}));
         }
