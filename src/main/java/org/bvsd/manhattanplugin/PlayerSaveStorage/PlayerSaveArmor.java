@@ -39,10 +39,10 @@ public class PlayerSaveArmor {
     private PlayerSaveItemStack Boot;
     
     public PlayerSaveArmor(ItemStack[] is){
-        Helm = new PlayerSaveItemStack(is[0]);
-        Chest = new PlayerSaveItemStack(is[1]);
-        Leg = new PlayerSaveItemStack(is[2]);
-        Boot = new PlayerSaveItemStack(is[3]);
+        Helm = new PlayerSaveItemStack(is[3]);
+        Chest = new PlayerSaveItemStack(is[2]);
+        Leg = new PlayerSaveItemStack(is[1]);
+        Boot = new PlayerSaveItemStack(is[0]);
     }
     public PlayerSaveArmor(){
         

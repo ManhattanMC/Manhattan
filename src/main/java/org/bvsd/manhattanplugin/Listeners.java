@@ -60,7 +60,7 @@ public class Listeners implements Listener{
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
-        if(!p.isOp()){
+//        if(!p.isOp()){
             if(p.getWorld().getName().equalsIgnoreCase("C-Main")){
                 p.setGameMode(GameMode.CREATIVE);
             }else{
@@ -73,7 +73,7 @@ public class Listeners implements Listener{
                 }
                 p.setGameMode(GameMode.SURVIVAL);
             }
-        }
+//        }
     }
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e){
