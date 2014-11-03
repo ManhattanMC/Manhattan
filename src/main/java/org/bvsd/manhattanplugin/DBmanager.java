@@ -53,8 +53,8 @@ public class DBmanager {
         }
         for(String name:Playerdats.keySet()){
             boolean successful = true;
-            File NLoc = new File(PSF + name + ".playersave.new");
-            File OLoc = new File(PSF + name + ".playersave");
+            File NLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat.new");
+            File OLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat");
             try {
                 mms.JSon.writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
@@ -74,8 +74,8 @@ public class DBmanager {
             PSF.mkdirs();
         }
         boolean successful = true;
-            File NLoc = new File(PSF + name + ".playersave.new");
-            File OLoc = new File(PSF + name + ".playersave");
+            File NLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat.new");
+            File OLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat");
             try {
                 mms.JSon.writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
@@ -94,10 +94,12 @@ public class DBmanager {
             PlayerSaveData pd = null;
             try {
                 pd = mms.JSon.readValue(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"), PlayerSaveData.class);
+                System.out.println(PlayerSaveData.class);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 System.out.println("IO ERROR");
+                Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             }
             Playerdats.put(pName, pd);
         }else{

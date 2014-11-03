@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveArmor;
 import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
 import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveItemStack;
 import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveLocation;
@@ -151,9 +152,7 @@ public class Commands implements CommandExecutor{
                 for(ItemStack i : oldInven1)
                     h.add(new PlayerSaveItemStack(i));
                 pd.setMainInven(h);
-                h.clear();
-                for(ItemStack i : oldInven2)
-                    h.add(new PlayerSaveItemStack(i));
+                pd.setArmorInven(new PlayerSaveArmor(oldInven2));
                 DBmanager.SavePlayer(player.getName());
                 return true;
             }
@@ -170,10 +169,7 @@ public class Commands implements CommandExecutor{
                 for(ItemStack i : oldInven1)
                     h.add(new PlayerSaveItemStack(i));
                 pd.setMainInven(h);
-                h.clear();
-                for(ItemStack i : oldInven2)
-                    h.add(new PlayerSaveItemStack(i));
-                pd.setArmorInven(h);
+                pd.setArmorInven(new PlayerSaveArmor(oldInven2));
                 pd.setLastLoc(new PlayerSaveLocation(oldloc));
                 if(player.hasPermission("group.mod")||player.hasPermission("group.admin")){
                     player.addAttachment(mms.plugin, "voxelsniper.*", true);

@@ -25,7 +25,7 @@ public class PlayerSaveData{
     @Getter @Setter
     public ArrayList<PlayerSaveItemStack> mainInven = new ArrayList<>();
     @Getter @Setter
-    public ArrayList<PlayerSaveItemStack> armorInven = new ArrayList<>();
+    public PlayerSaveArmor armorInven;
     @Getter @Setter
     public boolean beenCreate = false;
     @Getter @Setter
@@ -39,11 +39,17 @@ public class PlayerSaveData{
         lastLoc = new PlayerSaveLocation(Bukkit.getWorld("C-Main").getSpawnLocation());
         for(ItemStack i : is)
             mainInven.add(new PlayerSaveItemStack(i));
-        for(ItemStack i : is2)
-            armorInven.add(new PlayerSaveItemStack(i));
+        armorInven = new PlayerSaveArmor(is2);
     }
-    
-    public void SetInven(Player p){
+    public PlayerSaveData(){
         
+    }
+    public void SetInven(Player p){
+        p.getInventory().clear();
+        for (PlayerSaveItemStack i : mainInven) {
+            p.getInventory().addItem(i.toItemStack());
+        }
+        armorInven.GiveTo(p);
+        p.updateInventory();
     }
 }

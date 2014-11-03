@@ -30,10 +30,11 @@ import org.codehaus.jackson.map.SerializationConfig;
 public class mms extends JavaPlugin{
     public static mms plugin;
     public static HashMap<String, Integer> oldTargets = new HashMap<>();
-    public static ObjectMapper JSon = new ObjectMapper();//.configure(SerializationConfig.Feature.INDENT_OUTPUT, false);
+    public static ObjectMapper JSon;
     @Override
     public void onEnable(){
         this.getConfig().options().copyDefaults(true);
+        JSon = new ObjectMapper();//.configure(SerializationConfig.Feature.INDENT_OUTPUT, false);
         if(this.getConfig().contains("worlds")){
             for(String s : this.getConfig().getStringList("worlds")){
                 Bukkit.getServer().getWorlds().add(Bukkit.getServer().createWorld(new WorldCreator(s)));
