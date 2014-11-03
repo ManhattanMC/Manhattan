@@ -15,6 +15,38 @@
 				<target>1.7</target>
 			</configuration>
 		</plugin>
+                <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.codehaus</pattern>
+                                    <shadedPattern>co.mcme.thegaffer.libs.org.codehaus</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.eclipse</pattern>
+                                    <shadedPattern>co.mcme.thegaffer.libs.org.eclipse</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.projectlombok:lombok</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                </excludes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 	</plugins>
     </build>
     <repositories>
@@ -30,5 +62,17 @@
          <version>1.7.2-R0.1</version>
          <scope>compile</scope>
      </dependency>
+      <dependency>
+         <groupId>org.projectlombok</groupId>
+         <artifactId>lombok</artifactId>
+         <version>1.12.2</version>
+         <type>jar</type>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-mapper-asl</artifactId>
+         <version>1.9.13</version>
+         <type>jar</type>
+      </dependency>
    </dependencies>
 </project>

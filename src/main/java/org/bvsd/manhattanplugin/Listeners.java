@@ -64,6 +64,13 @@ public class Listeners implements Listener{
             if(p.getWorld().getName().equalsIgnoreCase("C-Main")){
                 p.setGameMode(GameMode.CREATIVE);
             }else{
+                if(e.getFrom().getName().equalsIgnoreCase("C-Main")){
+                    p.getInventory().clear();
+                    if(mms.oldTargets.containsKey(p.getName())){
+                        p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(p.getName())));
+                        mms.oldTargets.remove(p.getName());
+                    }
+                }
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }

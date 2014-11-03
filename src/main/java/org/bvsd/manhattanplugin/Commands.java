@@ -6,6 +6,7 @@
 
 package org.bvsd.manhattanplugin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import org.bukkit.Bukkit;
@@ -21,6 +22,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveArmor;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveItemStack;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveLocation;
 
 /**
  *
@@ -35,13 +40,15 @@ public class Commands implements CommandExecutor{
         }
         Player player = (Player) cs;
         //Vanish
-        if(cmd.getName().equalsIgnoreCase("vanish")){
+        if(cmd.getName().equalsIgnoreCase("vanish")&&player.isOp()){
             if(!DBmanager.vanished.contains(player.getName())){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000, 0, false));
                 DBmanager.vanished.add(player.getName());
             }else{
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                DBmanager.vanished.remove(player.getName());
             }
+            return true;
         }
         
         //hostile Areas
@@ -130,36 +137,22 @@ public class Commands implements CommandExecutor{
         }
         //WorldJump
         if(cmd.getName().equalsIgnoreCase("worldjump")){
-            PlayerDat pd = DBmanager.Playerdats.get(player.getName());
-//            player.sendMessage(String.valueOf(DBmanager.Playerdats));
+            PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
             if(player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();
-                if(!pd.lastLoc.getWorld().getName().contains("C-"))
-                    player.teleport(pd.lastLoc);
+                if(!pd.getLastLoc().toLocation().getWorld().getName().contains("C-"))
+                    player.teleport(pd.getLastLoc().toLocation());
                 else
                     player.teleport(Bukkit.getWorld("S-Main").getSpawnLocation());
                 player.getInventory().clear();
-                player.getInventory().setContents(pd.mainInven);
-                player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR),new ItemStack(Material.AIR),new ItemStack(Material.AIR),new ItemStack(Material.AIR)});
-                for(ItemStack is : pd.armorInven){
-                    if(is.getType().toString().contains("helmet")){
-                        player.getInventory().setHelmet(is);
-                    }else if(is.getType().toString().contains("chestplate")){
-                        player.getInventory().setChestplate(is);
-                    }else if(is.getType().toString().contains("leggings")){
-                        player.getInventory().setLeggings(is);
-                    }else if(is.getType().toString().contains("boots")){
-                        player.getInventory().setBoots(is);
-                    }
-                }
-//                player.setGameMode(GameMode.SURVIVAL);
-                DBmanager.Playerdats.put(player.getName(), new PlayerDat('s', oldloc, oldInven1, oldInven2, true));
-                if(mms.oldTargets.containsKey(player.getName())&&!player.getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
-                    player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(player.getName())));
-                    mms.oldTargets.remove(player.getName());
-                }
+                pd.SetInven(player);
+                ArrayList<PlayerSaveItemStack> h = new ArrayList<>();
+                for(ItemStack i : oldInven1)
+                    h.add(new PlayerSaveItemStack(i));
+                pd.setMainInven(h);
+                pd.setArmorInven(new PlayerSaveArmor(oldInven2));
                 DBmanager.SavePlayer(player.getName());
                 return true;
             }
@@ -167,28 +160,17 @@ public class Commands implements CommandExecutor{
                 Location oldloc = player.getLocation();
                 ItemStack[] oldInven1 = player.getInventory().getContents();
                 ItemStack[] oldInven2 = player.getInventory().getArmorContents();
-                if(!pd.lastLoc.getWorld().getName().contains("S-"))
-                    player.teleport(pd.lastLoc);
+                if(!pd.getLastLoc().toLocation().getWorld().getName().contains("S-"))
+                    player.teleport(pd.getLastLoc().toLocation());
                 else
                     player.teleport(Bukkit.getWorld("C-Main").getSpawnLocation());
-                player.getInventory().clear();
-                player.getInventory().setContents(pd.mainInven);
-                for(ItemStack is : pd.armorInven){
-                    if(is.getType().toString().contains("helmet")){
-                        player.getInventory().setHelmet(is);
-                    }else if(is.getType().toString().contains("chestplate")){
-                        player.getInventory().setChestplate(is);
-                    }else if(is.getType().toString().contains("leggings")){
-                        player.getInventory().setLeggings(is);
-                    }else if(is.getType().toString().contains("boots")){
-                        player.getInventory().setBoots(is);
-                    }
-                }
-//                player.setGameMode(GameMode.CREATIVE);
-                pd.mainInven = oldInven1;
-                pd.armorInven = oldInven2;
-                pd.lastLoc = oldloc;
-                DBmanager.Playerdats.put(player.getName(), new PlayerDat('c', oldloc, oldInven1, oldInven2, true));
+                pd.SetInven(player);
+                ArrayList<PlayerSaveItemStack> h = new ArrayList<>();
+                for(ItemStack i : oldInven1)
+                    h.add(new PlayerSaveItemStack(i));
+                pd.setMainInven(h);
+                pd.setArmorInven(new PlayerSaveArmor(oldInven2));
+                pd.setLastLoc(new PlayerSaveLocation(oldloc));
                 if(player.hasPermission("group.mod")||player.hasPermission("group.admin")){
                     player.addAttachment(mms.plugin, "voxelsniper.*", true);
                 }
