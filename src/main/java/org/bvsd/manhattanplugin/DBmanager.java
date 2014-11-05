@@ -53,8 +53,8 @@ public class DBmanager {
         }
         for(String name:Playerdats.keySet()){
             boolean successful = true;
-            File NLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat.new");
-            File OLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat");
+            File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
+            File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
             try {
                 mms.JSon.writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
@@ -74,8 +74,8 @@ public class DBmanager {
             PSF.mkdirs();
         }
         boolean successful = true;
-            File NLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat.new");
-            File OLoc = new File(PSF + System.getProperty("file.separator") + name + ".playerdat");
+            File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
+            File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
             try {
                 mms.JSon.writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
@@ -90,10 +90,10 @@ public class DBmanager {
             }
     }
     public static void LoadPlayers(String pName){
-        if(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat").exists()){
+        if(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat").exists()){
             PlayerSaveData pd = null;
             try {
-                pd = mms.JSon.readValue(new File(PSF.toString() + System.getProperty("file.separator") + pName + ".playerdat"), PlayerSaveData.class);
+                pd = mms.JSon.readValue(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat"), PlayerSaveData.class);
                 System.out.println(PlayerSaveData.class);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +103,7 @@ public class DBmanager {
             }
             Playerdats.put(pName, pd);
         }else{
-            Playerdats.put(pName, new PlayerSaveData('s', new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)}));
+            Playerdats.put(pName, new PlayerSaveData(false));
         }
     }
     ///Done

@@ -139,44 +139,15 @@ public class Commands implements CommandExecutor{
         if(cmd.getName().equalsIgnoreCase("worldjump")){
             PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
             if(player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
-                Location oldloc = player.getLocation();
-                ItemStack[] oldInven1 = player.getInventory().getContents();
-                ItemStack[] oldInven2 = player.getInventory().getArmorContents();
-                if(!pd.getLastLoc().toLocation().getWorld().getName().contains("C-"))
-                    player.teleport(pd.getLastLoc().toLocation());
-                else
-                    player.teleport(Bukkit.getWorld("S-Main").getSpawnLocation());
-                player.getInventory().clear();
-                pd.SetInven(player);
-                ArrayList<PlayerSaveItemStack> h = new ArrayList<>();
-                for(ItemStack i : oldInven1)
-                    h.add(new PlayerSaveItemStack(i));
-                pd.setMainInven(h);
-                pd.setArmorInven(new PlayerSaveArmor(oldInven2));
-                DBmanager.SavePlayer(player.getName());
+                pd.CreativeSave.Imprint(player);
+                player.getActivePotionEffects().clear();
+                pd.SurvivalSave.SetImprint(player);
                 return true;
             }
-            if(player.getLocation().getWorld().getName().equalsIgnoreCase("s-main")){
-                Location oldloc = player.getLocation();
-                ItemStack[] oldInven1 = player.getInventory().getContents();
-                ItemStack[] oldInven2 = player.getInventory().getArmorContents();
-                if(!pd.getLastLoc().toLocation().getWorld().getName().contains("S-"))
-                    player.teleport(pd.getLastLoc().toLocation());
-                else
-                    player.teleport(Bukkit.getWorld("C-Main").getSpawnLocation());
-                pd.SetInven(player);
-                ArrayList<PlayerSaveItemStack> h = new ArrayList<>();
-                for(ItemStack i : oldInven1)
-                    h.add(new PlayerSaveItemStack(i));
-                pd.setMainInven(h);
-                pd.setArmorInven(new PlayerSaveArmor(oldInven2));
-                pd.setLastLoc(new PlayerSaveLocation(oldloc));
-                if(player.hasPermission("group.mod")||player.hasPermission("group.admin")){
-                    player.addAttachment(mms.plugin, "voxelsniper.*", true);
-                }
-                DBmanager.SavePlayer(player.getName());
+            if(player.getLocation().getWorld().getName().contains("S-")){
+                pd.SurvivalSave.Imprint(player);
+                pd.CreativeSave.SetImprint(player);
                 return true;
-                
             }
         }
         return false;

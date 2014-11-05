@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -21,35 +22,21 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class PlayerSaveData{
 //        public char world;
     @Getter @Setter
-    private PlayerSaveLocation lastLoc;
+    public PlayerSave CreativeSave;
     @Getter @Setter
-    public ArrayList<PlayerSaveItemStack> mainInven = new ArrayList<>();
-    @Getter @Setter
-    public PlayerSaveArmor armorInven;
+    public PlayerSave SurvivalSave;
     @Getter @Setter
     public boolean beenCreate = false;
     @Getter @Setter
     @JsonIgnore
     public int money = 0;
-//    @Getter @Setter
-//    @JsonIgnore
-//    public ArrayList<Plot> land = new ArrayList<>();
-
-    public PlayerSaveData(char w, ItemStack[] is, ItemStack[] is2){
-        lastLoc = new PlayerSaveLocation(Bukkit.getWorld("C-Main").getSpawnLocation());
-        for(ItemStack i : is)
-            mainInven.add(new PlayerSaveItemStack(i));
-        armorInven = new PlayerSaveArmor(is2);
+    public PlayerSaveData(boolean real){
+        if(!real){
+            SurvivalSave = new PlayerSave(Bukkit.getWorld("S-Main").getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+            CreativeSave = new PlayerSave(Bukkit.getWorld("C-Main").getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+        }
     }
     public PlayerSaveData(){
         
-    }
-    public void SetInven(Player p){
-        p.getInventory().clear();
-        for (PlayerSaveItemStack i : mainInven) {
-            p.getInventory().addItem(i.toItemStack());
-        }
-        armorInven.GiveTo(p);
-        p.updateInventory();
     }
 }
