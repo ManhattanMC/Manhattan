@@ -40,6 +40,10 @@ public class PlayerSave {
     public ArrayList<PlayerSaveItemStack> mainInven = new ArrayList<>();
     @Getter @Setter
     public PlayerSaveArmor armorInven;
+    @Getter @Setter
+    private float Xp;
+    @Getter @Setter
+    private int lvl;
     @JsonIgnore
     private Player pHold;
     
@@ -48,12 +52,15 @@ public class PlayerSave {
         for(ItemStack i : is)
             mainInven.add(new PlayerSaveItemStack(i));
         armorInven = new PlayerSaveArmor(is2);
+        Xp=0;
     }
     public PlayerSave(){
         
     }
     @JsonIgnore
     public boolean Imprint(Player p){ //sets PlayerSave to Player
+        Xp = p.getExp();
+        lvl = p.getLevel();
         mainInven.clear();
         for(ItemStack s:p.getInventory().getContents()){
             mainInven.add(new PlayerSaveItemStack(s));
@@ -66,6 +73,8 @@ public class PlayerSave {
     public void SetImprint(Player p){ //sets Player to PlayerSave
         p.getInventory().clear();
         p.teleport(lastLoc.toLocation());
+        p.setExp(Xp);
+        p.setLevel(lvl);
         pHold = p;
         Bukkit.getScheduler().scheduleSyncDelayedTask(mms.plugin, new Runnable() {
             @Override

@@ -140,7 +140,9 @@ public class Commands implements CommandExecutor{
             PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
             if(player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
                 pd.CreativeSave.Imprint(player);
-                player.getActivePotionEffects().clear();
+                for(PotionEffect effect : player.getActivePotionEffects()){
+                    player.removePotionEffect(effect.getType());
+                }
                 pd.SurvivalSave.SetImprint(player);
                 return true;
             }
