@@ -9,10 +9,10 @@ Development goals and progress:
 ### Sky Islands:
 There will be a building contest held from October 5th to 19th. The top ten islands selected by my self and the other staff will be used on the survival server for pvp. Make sure that your islands are pvp ready :D
 
-### PVP worlds: _(PVP blocked for all)_
+### PVP worlds: _(PVP blocked for all but DG)_
 There will be no ‘pvp world’ however there will be pvp locations around the map and on sky islands
 
-### Death Games: _(Started, on hold for DB)_
+### Death Games: _(Almost finished)_
 Every 24 hours a player will be selected as the Death Games target. Only players entered to be selected may take part in the killing. For the day, target will have access to PVP and the killers will have access to kill them. At the end of the day the target will get a certain prize!
 
 ### Building world: _(Completed 9/23/14)_
