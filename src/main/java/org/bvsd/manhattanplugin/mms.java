@@ -15,6 +15,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +32,9 @@ public class mms extends JavaPlugin{
     public static mms plugin;
     public static HashMap<String, Integer> oldTargets = new HashMap<>();
     public static ObjectMapper JSon;
+    public static World CreativeWorld;
+    public static World SurvivalWorld;
+    public static DeathGame dg;
     @Override
     public void onEnable(){
         this.getConfig().options().copyDefaults(true);
@@ -40,6 +44,9 @@ public class mms extends JavaPlugin{
                 Bukkit.getServer().getWorlds().add(Bukkit.getServer().createWorld(new WorldCreator(s)));
             }
         }
+        dg = new DeathGame();
+        CreativeWorld = Bukkit.getWorld("C-Main");
+        SurvivalWorld = Bukkit.getWorld("S-Main");
         getCommand("worldjump").setExecutor(new Commands());
         getCommand("deathgames").setExecutor(new Commands());
         getCommand("vanish").setExecutor(new Commands());
@@ -47,44 +54,10 @@ public class mms extends JavaPlugin{
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new Listeners(), this);
         this.plugin = this;
-        Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
-        long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
+        
         DBmanager.LoadDG();
         DBmanager.LoadHZones();
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage("Selecting new DeathGames Target...");
-                if(Bukkit.getOfflinePlayer(DBmanager.DGtarget).isOnline()){
-                    if(!Bukkit.getPlayer(DBmanager.DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
-                        Bukkit.getPlayer(DBmanager.DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
-                    }else{
-                        if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
-                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
-                        }else{
-                            mms.oldTargets.put(DBmanager.DGtarget, 1);
-                        }
-                    }
-                }else{
-                                            if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
-                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
-                        }else{
-                            mms.oldTargets.put(DBmanager.DGtarget, 1);
-                        }
-                }
-                Random gen = new Random();
-                String ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
-                while(ntar.equals(DBmanager.DGtarget)&&DBmanager.DGplayers.size()>1){
-                    ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
-                }
-                DBmanager.DGtarget = ntar;
-                DBmanager.DGsign.getBlock().setType(Material.SIGN_POST);
-                Sign DS = (Sign)DBmanager.DGsign.getBlock().getState();
-                DS.setLine(1, ChatColor.AQUA + "Death Games:");
-                DS.setLine(2, ChatColor.BLUE + DBmanager.DGtarget);
-                DS.update();
-            }
-        }, seconds*20, 24 * (60 * 60 * 20));
+        
         DBmanager.vanished.add("none");
     }
     @Override

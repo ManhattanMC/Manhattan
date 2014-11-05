@@ -6,13 +6,11 @@
 
 package org.bvsd.manhattanplugin.PlayerSaveStorage;
 
-import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bvsd.manhattanplugin.mms;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -32,8 +30,8 @@ public class PlayerSaveData{
     public int money = 0;
     public PlayerSaveData(boolean real){
         if(!real){
-            SurvivalSave = new PlayerSave(Bukkit.getWorld("S-Main").getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
-            CreativeSave = new PlayerSave(Bukkit.getWorld("C-Main").getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+            SurvivalSave = new PlayerSave(mms.SurvivalWorld.getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+            CreativeSave = new PlayerSave(mms.CreativeWorld.getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
         }
     }
     public PlayerSaveData(){

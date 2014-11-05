@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -34,7 +35,7 @@ public class Listeners implements Listener{
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
         DBmanager.LoadPlayers(p.getName());
-        if(mms.oldTargets.containsKey(p.getName())&&!p.getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
+        if(mms.oldTargets.containsKey(p.getName())&&!p.getLocation().getWorld().equals(mms.CreativeWorld)){
             p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(p.getName())));
             mms.oldTargets.remove(p.getName());
         }
@@ -51,20 +52,26 @@ public class Listeners implements Listener{
     Block t = e.getClickedBlock();
     Player p = e.getPlayer();
     if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if(t.getType().equals(Material.ENDER_CHEST)&&p.getWorld().getName().equalsIgnoreCase("c-main")){
+            if(t.getType().equals(Material.ENDER_CHEST)&&p.getWorld().equals(mms.CreativeWorld)){
                 p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
                 e.setCancelled(true);
             }
         }
     }
     @EventHandler
+    public void onEntityPortal(EntityPortalEvent e){
+        if(e.getFrom().getWorld().equals(mms.CreativeWorld)){
+            e.getEntity().remove();
+        }
+    }
+    @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
-//        if(!p.isOp()){
-            if(p.getWorld().getName().equalsIgnoreCase("C-Main")){
+        if(!p.isOp()){
+            if(p.getWorld().equals(mms.CreativeWorld)){
                 p.setGameMode(GameMode.CREATIVE);
             }else{
-                if(e.getFrom().getName().equalsIgnoreCase("C-Main")){
+                if(e.getFrom().equals(mms.CreativeWorld)){
                     p.getInventory().clear();
                     p.setExp(0);
                     p.setLevel(0);
@@ -76,7 +83,7 @@ public class Listeners implements Listener{
                 }
                 p.setGameMode(GameMode.SURVIVAL);
             }
-//        }
+        }
     }
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e){
@@ -85,11 +92,11 @@ public class Listeners implements Listener{
         if (damager instanceof Player && target instanceof Player){
             Player att = (Player) damager;
             Player targ = (Player) target;
-            if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+            if(!targ.getName().equalsIgnoreCase(DeathGame.DGtarget)&&!att.getName().equalsIgnoreCase(DeathGame.DGtarget)){
                 att.sendMessage(ChatColor.RED + "You are in a no pvp zone");//.toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString());
                 e.setCancelled(true);
-            }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-                if(!DBmanager.DGplayers.contains(att.getName())){
+            }else if(targ.getName().equalsIgnoreCase(DeathGame.DGtarget)){
+                if(!DeathGame.DGplayers.contains(att.getName())){
                     att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
                     e.setCancelled(true);
                 }else if(att.getItemInHand().hasItemMeta()){
@@ -105,11 +112,11 @@ public class Listeners implements Listener{
             if (shooter instanceof Player){
                 Player att = (Player) shooter;
                 Player targ = (Player) target;
-                if(!targ.getName().equalsIgnoreCase(DBmanager.DGtarget)&&!att.getName().equalsIgnoreCase(DBmanager.DGtarget)){
+                if(!targ.getName().equalsIgnoreCase(DeathGame.DGtarget)&&!att.getName().equalsIgnoreCase(DeathGame.DGtarget)){
                         att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
                         e.setCancelled(true);
-                }else if(targ.getName().equalsIgnoreCase(DBmanager.DGtarget)){
-                    if(!DBmanager.DGplayers.contains(att.getName())){
+                }else if(targ.getName().equalsIgnoreCase(DeathGame.DGtarget)){
+                    if(!DeathGame.DGplayers.contains(att.getName())){
                         att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
                         e.setCancelled(true);
                     }else if(att.getItemInHand().hasItemMeta()){
@@ -148,14 +155,5 @@ public class Listeners implements Listener{
     public void onWorldSave(WorldSaveEvent e){
         DBmanager.SavePlayers();
     }
-    /*@EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e){
-        Block t = e.getClickedBlock();
-        Player p = e.getPlayer();
-        //no ender chest in creative
-        if(t.getType().equals(Material.ENDER_CHEST)&&p.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
-            p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
-            e.setCancelled(true);
-        }
-    }*/
+
 }

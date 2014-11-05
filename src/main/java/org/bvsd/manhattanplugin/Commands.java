@@ -6,12 +6,11 @@
 
 package org.bvsd.manhattanplugin;
 
-import java.util.ArrayList;
+import org.bvsd.manhattanplugin.HostileZones.HostileZone;
 import java.util.Arrays;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -22,10 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveArmor;
 import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
-import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveItemStack;
-import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveLocation;
 
 /**
  *
@@ -71,19 +67,19 @@ public class Commands implements CommandExecutor{
         //DG
         if(cmd.getName().equalsIgnoreCase("deathgames") && args.length>0){
             if(args[0].equalsIgnoreCase("join")){
-                if(DBmanager.DGplayers.contains(player.getName())){
+                if(DeathGame.DGplayers.contains(player.getName())){
                     player.sendMessage("You are already in the Death Games");
                 }else{
-                    DBmanager.DGplayers.add(player.getName());
+                    DeathGame.DGplayers.add(player.getName());
                     player.sendMessage("You are now part of the deathgames");
                 }
                 return true;
             }else if(args[0].equalsIgnoreCase("leave")){
-                if(!DBmanager.DGplayers.contains(player.getName())){
+                if(!DeathGame.DGplayers.contains(player.getName())){
                     player.sendMessage("You are not in the Death Games");
                 }else{
-                    if(DBmanager.DGtarget.equalsIgnoreCase(player.getName())){
-                        DBmanager.DGplayers.remove(player.getName());
+                    if(DeathGame.DGtarget.equalsIgnoreCase(player.getName())){
+                        DeathGame.DGplayers.remove(player.getName());
                         player.sendMessage("You are no longer in the deathgames");
                     }else{
                         player.sendMessage("You are the target, you cannot leave untill midnight!");
@@ -99,37 +95,37 @@ public class Commands implements CommandExecutor{
                 player.getInventory().addItem(sword);
                 return true;
             }else if(args[0].equalsIgnoreCase("target")&&player.isOp()){
-                player.sendMessage(DBmanager.DGtarget);
+                player.sendMessage(DeathGame.DGtarget);
                 return true;
             }else if(args[0].equalsIgnoreCase("reroll")&&player.isOp()){
                 Bukkit.broadcastMessage("Selecting new DeathGames Target...");
-                if(Bukkit.getOfflinePlayer(DBmanager.DGtarget).isOnline()){
-                    if(!Bukkit.getPlayer(DBmanager.DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
-                        Bukkit.getPlayer(DBmanager.DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
+                if(Bukkit.getOfflinePlayer(DeathGame.DGtarget).isOnline()){
+                    if(!Bukkit.getPlayer(DeathGame.DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
+                        Bukkit.getPlayer(DeathGame.DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                                                if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
-                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
+                                                if(mms.oldTargets.containsKey(DeathGame.DGtarget)){
+                            mms.oldTargets.put(DeathGame.DGtarget, mms.oldTargets.get(DeathGame.DGtarget)+1);
                         }else{
-                            mms.oldTargets.put(DBmanager.DGtarget, 1);
+                            mms.oldTargets.put(DeathGame.DGtarget, 1);
                         }
                     }
                 }else{
-                                            if(mms.oldTargets.containsKey(DBmanager.DGtarget)){
-                            mms.oldTargets.put(DBmanager.DGtarget, mms.oldTargets.get(DBmanager.DGtarget)+1);
+                                            if(mms.oldTargets.containsKey(DeathGame.DGtarget)){
+                            mms.oldTargets.put(DeathGame.DGtarget, mms.oldTargets.get(DeathGame.DGtarget)+1);
                         }else{
-                            mms.oldTargets.put(DBmanager.DGtarget, 1);
+                            mms.oldTargets.put(DeathGame.DGtarget, 1);
                         }
                 }
                 Random gen = new Random();
-                String ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
-                while(ntar.equals(DBmanager.DGtarget)&&DBmanager.DGplayers.size()>1){
-                    ntar = DBmanager.DGplayers.get((int) (gen.nextInt(DBmanager.DGplayers.size())));
+                String ntar = DeathGame.DGplayers.get((int) (gen.nextInt(DeathGame.DGplayers.size())));
+                while(ntar.equals(DeathGame.DGtarget)&&DeathGame.DGplayers.size()>1){
+                    ntar = DeathGame.DGplayers.get((int) (gen.nextInt(DeathGame.DGplayers.size())));
                 }
-                DBmanager.DGtarget = ntar;
-                DBmanager.DGsign.getBlock().setType(Material.SIGN_POST);
-                Sign DS = (Sign)DBmanager.DGsign.getBlock().getState();
+                DeathGame.DGtarget = ntar;
+                DeathGame.DGsign.getBlock().setType(Material.SIGN_POST);
+                Sign DS = (Sign)DeathGame.DGsign.getBlock().getState();
                 DS.setLine(1, ChatColor.AQUA + "Death Games:");
-                DS.setLine(2, ChatColor.BLUE + DBmanager.DGtarget);
+                DS.setLine(2, ChatColor.BLUE + DeathGame.DGtarget);
                 DS.update();
                 
                 return true;
@@ -138,7 +134,7 @@ public class Commands implements CommandExecutor{
         //WorldJump
         if(cmd.getName().equalsIgnoreCase("worldjump")){
             PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
-            if(player.getLocation().getWorld().getName().equalsIgnoreCase("c-main")){
+            if(player.getLocation().getWorld().equals(mms.CreativeWorld)){
                 pd.CreativeSave.Imprint(player);
                 for(PotionEffect effect : player.getActivePotionEffects()){
                     player.removePotionEffect(effect.getType());
@@ -146,7 +142,7 @@ public class Commands implements CommandExecutor{
                 pd.SurvivalSave.SetImprint(player);
                 return true;
             }
-            if(player.getLocation().getWorld().getName().contains("S-")){
+            if(player.getLocation().getWorld().getName().contains(mms.SurvivalWorld.getName())){
                 pd.SurvivalSave.Imprint(player);
                 pd.CreativeSave.SetImprint(player);
                 return true;

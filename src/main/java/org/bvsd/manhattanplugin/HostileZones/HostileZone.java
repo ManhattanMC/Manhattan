@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.bvsd.manhattanplugin;
+package org.bvsd.manhattanplugin.HostileZones;
 
 import org.bukkit.Location;
 
