@@ -44,7 +44,7 @@ public class mms extends JavaPlugin{
                 Bukkit.getServer().getWorlds().add(Bukkit.getServer().createWorld(new WorldCreator(s)));
             }
         }
-        dg = new DeathGame();
+//        dg = new DeathGame();
         CreativeWorld = Bukkit.getWorld("C-Main");
         SurvivalWorld = Bukkit.getWorld("S-Main");
         getCommand("worldjump").setExecutor(new Commands());

@@ -20,6 +20,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -148,6 +149,17 @@ public class Listeners implements Listener{
                         e.setCancelled(true);
                     }
                 }
+            }
+        }
+    }
+    @EventHandler
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
+        Player p = e.getPlayer();
+        if(!p.isOp()&&e.getMessage().contains("tp")){
+            if(p.getLocation().getWorld().equals(mms.CreativeWorld)){
+                DBmanager.Playerdats.get(p.getName()).CreativeSave.Imprint(p);
+            }else if(p.getLocation().getWorld().getName().contains(mms.SurvivalWorld.getName())){
+                DBmanager.Playerdats.get(p.getName()).SurvivalSave.Imprint(p);
             }
         }
     }

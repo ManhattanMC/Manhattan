@@ -6,11 +6,11 @@
 
 package org.bvsd.manhattanplugin;
 
-import org.bvsd.manhattanplugin.HostileZones.HostileZone;
 import java.util.Arrays;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bvsd.manhattanplugin.HostileZones.HostileZone;
 import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
 
 /**
@@ -38,7 +39,8 @@ public class Commands implements CommandExecutor{
         //Vanish
         if(cmd.getName().equalsIgnoreCase("vanish")&&player.isOp()){
             if(!DBmanager.vanished.contains(player.getName())){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000, 0, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647 , 2));
+                player.getWorld().playEffect(player.getLocation(),Effect.MOBSPAWNER_FLAMES,4);
                 DBmanager.vanished.add(player.getName());
             }else{
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -136,13 +138,14 @@ public class Commands implements CommandExecutor{
             PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
             if(player.getLocation().getWorld().equals(mms.CreativeWorld)){
                 pd.CreativeSave.Imprint(player);
-                for(PotionEffect effect : player.getActivePotionEffects()){
-                    player.removePotionEffect(effect.getType());
+                if(!player.isOp()){
+                    for(PotionEffect effect : player.getActivePotionEffects()){
+                        player.removePotionEffect(effect.getType());
+                    }
                 }
                 pd.SurvivalSave.SetImprint(player);
                 return true;
-            }
-            if(player.getLocation().getWorld().getName().contains(mms.SurvivalWorld.getName())){
+            }else if(player.getLocation().getWorld().getName().contains(mms.SurvivalWorld.getName())){
                 pd.SurvivalSave.Imprint(player);
                 pd.CreativeSave.SetImprint(player);
                 return true;
