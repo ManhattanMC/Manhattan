@@ -150,6 +150,7 @@ public class Commands implements CommandExecutor{
                 pd.CreativeSave.SetImprint(player);
                 return true;
             }
+            DBmanager.SavePlayer(player.getName());
         }
         return false;
     }
