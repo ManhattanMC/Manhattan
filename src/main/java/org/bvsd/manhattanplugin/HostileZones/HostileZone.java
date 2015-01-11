@@ -6,21 +6,29 @@
 
 package org.bvsd.manhattanplugin.HostileZones;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveLocation;
 
 /**
  *
  * @author Donovan
  */
 public class HostileZone {
-    public Location center;
-    public int radius;
-    public int difficulty;
+    @Getter @Setter
+    private PlayerSaveLocation center;
+    @Getter @Setter
+    private int radius;
+    @Getter @Setter
+    private int difficulty;
+    
     public HostileZone(Location c, int r, int d){
-        this.center = c;
+        this.center = new PlayerSaveLocation(c);
         this.radius = r;
         this.difficulty = d;
     }
+    
     public boolean inZone(Location loc){
         double dist = Math.sqrt((loc.getX()-center.getX())*(loc.getX()-center.getX()) + (loc.getY()-center.getY())*(loc.getY()-center.getY()));
         return (dist < radius);

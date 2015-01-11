@@ -16,19 +16,12 @@
  * 
  * 
  */
-
 package org.bvsd.manhattanplugin.HostileZones;
-
-import org.bukkit.entity.Entity;
 
 /**
  *
  * @author Donovan
  */
-public class Boss {
-    public Entity Master;
+public class DBmanager {
     
-    public Boss(){
-        
-    }
 }

@@ -105,18 +105,18 @@ public class Commands implements CommandExecutor{
                     if(!Bukkit.getPlayer(DeathGame.DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                         Bukkit.getPlayer(DeathGame.DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                                                if(mms.oldTargets.containsKey(DeathGame.DGtarget)){
-                            mms.oldTargets.put(DeathGame.DGtarget, mms.oldTargets.get(DeathGame.DGtarget)+1);
+                        if(ManhattanPlugin.oldTargets.containsKey(DeathGame.DGtarget)){
+                            ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, ManhattanPlugin.oldTargets.get(DeathGame.DGtarget)+1);
                         }else{
-                            mms.oldTargets.put(DeathGame.DGtarget, 1);
+                            ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, 1);
                         }
                     }
                 }else{
-                                            if(mms.oldTargets.containsKey(DeathGame.DGtarget)){
-                            mms.oldTargets.put(DeathGame.DGtarget, mms.oldTargets.get(DeathGame.DGtarget)+1);
-                        }else{
-                            mms.oldTargets.put(DeathGame.DGtarget, 1);
-                        }
+                    if(ManhattanPlugin.oldTargets.containsKey(DeathGame.DGtarget)){
+                        ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, ManhattanPlugin.oldTargets.get(DeathGame.DGtarget)+1);
+                    }else{
+                        ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, 1);
+                    }
                 }
                 Random gen = new Random();
                 String ntar = DeathGame.DGplayers.get((int) (gen.nextInt(DeathGame.DGplayers.size())));
@@ -136,7 +136,7 @@ public class Commands implements CommandExecutor{
         //WorldJump
         if(cmd.getName().equalsIgnoreCase("worldjump")){
             PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
-            if(player.getLocation().getWorld().equals(mms.CreativeWorld)){
+            if(player.getLocation().getWorld().equals(ManhattanPlugin.CreativeWorld)){
                 pd.CreativeSave.Imprint(player);
                 if(!player.isOp()){
                     for(PotionEffect effect : player.getActivePotionEffects()){
@@ -145,7 +145,7 @@ public class Commands implements CommandExecutor{
                 }
                 pd.SurvivalSave.SetImprint(player);
                 return true;
-            }else if(player.getLocation().getWorld().getName().contains(mms.SurvivalWorld.getName())){
+            }else if(player.getLocation().getWorld().getName().contains(ManhattanPlugin.SurvivalWorld.getName())){
                 pd.SurvivalSave.Imprint(player);
                 pd.CreativeSave.SetImprint(player);
                 return true;

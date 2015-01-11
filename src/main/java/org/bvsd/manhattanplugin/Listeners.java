@@ -36,9 +36,9 @@ public class Listeners implements Listener{
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
         DBmanager.LoadPlayers(p.getName());
-        if(mms.oldTargets.containsKey(p.getName())&&!p.getLocation().getWorld().equals(mms.CreativeWorld)){
-            p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(p.getName())));
-            mms.oldTargets.remove(p.getName());
+        if(ManhattanPlugin.oldTargets.containsKey(p.getName())&&!p.getLocation().getWorld().equals(ManhattanPlugin.CreativeWorld)){
+            p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.oldTargets.get(p.getName())));
+            ManhattanPlugin.oldTargets.remove(p.getName());
         }
     }
     @EventHandler
@@ -53,7 +53,7 @@ public class Listeners implements Listener{
     Block t = e.getClickedBlock();
     Player p = e.getPlayer();
     if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if(t.getType().equals(Material.ENDER_CHEST)&&p.getWorld().equals(mms.CreativeWorld)){
+            if(t.getType().equals(Material.ENDER_CHEST)&&p.getWorld().equals(ManhattanPlugin.CreativeWorld)){
                 p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
                 e.setCancelled(true);
             }
@@ -61,7 +61,7 @@ public class Listeners implements Listener{
     }
     @EventHandler
     public void onEntityPortal(EntityPortalEvent e){
-        if(e.getFrom().getWorld().equals(mms.CreativeWorld)){
+        if(e.getFrom().getWorld().equals(ManhattanPlugin.CreativeWorld)){
             e.getEntity().remove();
         }
     }
@@ -69,17 +69,17 @@ public class Listeners implements Listener{
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
         if(!p.isOp()){
-            if(p.getWorld().equals(mms.CreativeWorld)){
+            if(p.getWorld().equals(ManhattanPlugin.CreativeWorld)){
                 p.setGameMode(GameMode.CREATIVE);
             }else{
-                if(e.getFrom().equals(mms.CreativeWorld)){
+                if(e.getFrom().equals(ManhattanPlugin.CreativeWorld)){
                     p.getInventory().clear();
                     p.setExp(0);
                     p.setLevel(0);
                     p.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
-                    if(mms.oldTargets.containsKey(p.getName())){
-                        p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, mms.oldTargets.get(p.getName())));
-                        mms.oldTargets.remove(p.getName());
+                    if(ManhattanPlugin.oldTargets.containsKey(p.getName())){
+                        p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.oldTargets.get(p.getName())));
+                        ManhattanPlugin.oldTargets.remove(p.getName());
                     }
                 }
                 p.setGameMode(GameMode.SURVIVAL);
@@ -156,9 +156,9 @@ public class Listeners implements Listener{
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
         Player p = e.getPlayer();
         if(!p.isOp()&&e.getMessage().contains("tp")){
-            if(p.getLocation().getWorld().equals(mms.CreativeWorld)){
+            if(p.getLocation().getWorld().equals(ManhattanPlugin.CreativeWorld)){
                 DBmanager.Playerdats.get(p.getName()).CreativeSave.Imprint(p);
-            }else if(p.getLocation().getWorld().getName().contains(mms.SurvivalWorld.getName())){
+            }else if(p.getLocation().getWorld().getName().contains(ManhattanPlugin.SurvivalWorld.getName())){
                 DBmanager.Playerdats.get(p.getName()).SurvivalSave.Imprint(p);
             }
         }

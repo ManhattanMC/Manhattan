@@ -26,7 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bvsd.manhattanplugin.mms;
+import org.bvsd.manhattanplugin.ManhattanPlugin;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -76,7 +76,7 @@ public class PlayerSave {
         p.setExp(Xp);
         p.setLevel(lvl);
         pHold = p;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(mms.plugin, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ManhattanPlugin.plugin, new Runnable() {
             @Override
             public void run(){
                 for (PlayerSaveItemStack i : mainInven) {

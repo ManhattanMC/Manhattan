@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
@@ -29,7 +27,7 @@ public class DBmanager {
     
     public static List<HostileZone> HZones = new ArrayList<>();
     
-    public static File PSF = new File(mms.plugin.getDataFolder() + System.getProperty("file.separator") + "PlayerSaves");
+    public static File PSF = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "PlayerSaves");
     
     public static ArrayList<String> vanished = new ArrayList<>();
 
@@ -42,7 +40,7 @@ public class DBmanager {
             File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
             File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
             try {
-                mms.JSon.writeValue(NLoc, Playerdats.get(name));
+                ManhattanPlugin.JSon.writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
                 successful = false;
             } finally {
@@ -63,7 +61,7 @@ public class DBmanager {
             File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
             File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
             try {
-                mms.JSon.writeValue(NLoc, Playerdats.get(name));
+                ManhattanPlugin.JSon.writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
                 successful = false;
             } finally {
@@ -76,10 +74,11 @@ public class DBmanager {
             }
     }
     public static void LoadPlayers(String pName){
+        
         if(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat").exists()){
             PlayerSaveData pd = null;
             try {
-                pd = mms.JSon.readValue(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat"), PlayerSaveData.class);
+                pd = ManhattanPlugin.JSon.readValue(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat"), PlayerSaveData.class);
                 System.out.println(PlayerSaveData.class);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,22 +96,22 @@ public class DBmanager {
     //player load
     public static void SaveDG(){
         try {
-                mms.dg = mms.JSon.readValue(new File(mms.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
+                ManhattanPlugin.dg = ManhattanPlugin.JSon.readValue(new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
         } catch (FileNotFoundException ex) {
-                mms.dg = new DeathGame();
+                ManhattanPlugin.dg = new DeathGame();
         } catch (IOException ex) {
             System.out.println("IO ERROR");
         }
     }
     public static void LoadDG(){
-        if(!new File(mms.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat").exists()){
+        if(!new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat").exists()){
             DeathGame.DGplayers = new ArrayList<>();
             DeathGame.DGtarget = "none";
-            DeathGame.DGsign = mms.SurvivalWorld.getSpawnLocation();
+            DeathGame.DGsign = ManhattanPlugin.SurvivalWorld.getSpawnLocation();
             return;
         }else{
             try {
-                DeathGame dg = mms.JSon.readValue(new File(mms.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
+                DeathGame dg = ManhattanPlugin.JSon.readValue(new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
             } catch (FileNotFoundException ex) {
                     Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -121,31 +120,39 @@ public class DBmanager {
         }
     }
     public static void SaveHZones(){
-        FileConfiguration configF = mms.plugin.getConfig();
-        configF.set("HZones.size", HZones.size());
-        for(int i = 1; i<=HZones.size(); i++){
-            HostileZone hz = HZones.get(i-1);
-            configF.set("HZones.hz"+i+".rad", hz.radius);
-            configF.set("HZones.hz"+i+".diff", hz.difficulty);
-            //cent loc
-            configF.set("HZones.hz"+i+".cent.Wname", hz.center.getWorld().getName());
-            configF.set("HZones.hz"+i+".cent.X", hz.center.getBlockX());
-            configF.set("HZones.hz"+i+".cent.Y", hz.center.getBlockY());
-            configF.set("HZones.hz"+i+".cent.Z", hz.center.getBlockZ());
-            //
+        File base = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
+        if(!base.exists()){
+            base.mkdirs();
         }
-        mms.plugin.saveConfig();
-        
+        boolean successful;
+        for(int i = 0; i<HZones.size(); i++){
+            File start = new File(base + System.getProperty("file.separator") + "Zone-" + i + ".HZone.new");
+            File finish = new File(base + System.getProperty("file.separator") + "Zone-" + i + ".HZone");
+            successful = true;
+            try {
+                ManhattanPlugin.JSon.writeValue(start, DBmanager.HZones.get(i));
+            } catch (IOException ex) {
+                successful = false;
+            } finally {
+                if (successful) {
+                    if (finish.exists()) {
+                        finish.delete();
+                    }
+                    start.renameTo(finish);
+                }
+            }
+        }
     }
     public static void LoadHZones(){
-        FileConfiguration configF = mms.plugin.getConfig();
-        for(int i = 1; i<=configF.getInt("HZones.size"); i++){
-            int rad = configF.getInt("HZones.hz"+i+".rad");
-            int diff = configF.getInt("HZones.hz"+i+".diff");
-            //cent loc
-            Location loc = new Location(Bukkit.getWorld(configF.getString("HZones.hz"+i+".cent.Wname")), configF.getInt("HZones.hz"+i+".cent.X"), configF.getInt("HZones.hz"+i+".cent.Y"),  configF.getInt("HZones.hz"+i+".cent.Z"));
-            //
-            HZones.add(new HostileZone(loc, rad, diff));
+        File base = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
+        for(File f:base.listFiles()){
+            try {
+                HZones.add(ManhattanPlugin.JSon.readValue(f, HostileZone.class));
+            } catch (FileNotFoundException ex) {
+                    Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                System.out.println("IO ERROR");
+            }
         }
     }
 }
