@@ -28,7 +28,16 @@ import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
  *
  * @author Donovan
  */
-public class Commands implements CommandExecutor{
+public class Commands implements CommandExecutor{ // need to make TabExecutor
+    /**
+     * Called when a player uses a mms command
+     * 
+     * @param cs The sender, console or player
+     * @param cmd The command ie /<command>
+     * @param label The string version of the command (don't use it)
+     * @param args The argument provided with the command ie /<command> [args[0]] [args[1]] ...
+     * @return if the command succeeded
+     */
     @Override
     public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
         if(cs instanceof Player){}else{

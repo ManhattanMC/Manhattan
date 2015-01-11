@@ -36,13 +36,13 @@ class PlayerSaveEnchantmentMeta {
     @Setter
     private HashMap<String, Integer> enchants = new HashMap();
 
-    public PlayerSaveEnchantmentMeta(ItemMeta meta) {
+    public PlayerSaveEnchantmentMeta(ItemMeta meta) {//for use in code
         for (Map.Entry<Enchantment, Integer> entry : meta.getEnchants().entrySet()) {
             enchants.put(entry.getKey().getName(), entry.getValue());
         }
     }
     
-    public PlayerSaveEnchantmentMeta() {
+    public PlayerSaveEnchantmentMeta() {//for use by JSON
         
     }
 }

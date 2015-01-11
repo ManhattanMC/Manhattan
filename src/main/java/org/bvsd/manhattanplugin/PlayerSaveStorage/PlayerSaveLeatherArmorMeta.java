@@ -40,7 +40,7 @@ class PlayerSaveLeatherArmorMeta {
     @Setter
     private List<String> lore;
 
-    public PlayerSaveLeatherArmorMeta(LeatherArmorMeta meta) {
+    public PlayerSaveLeatherArmorMeta(LeatherArmorMeta meta) {//for use in code
         this.rgb = meta.getColor().asRGB();
         if (meta.hasDisplayName()) {
             this.displayName = meta.getDisplayName();
@@ -49,7 +49,7 @@ class PlayerSaveLeatherArmorMeta {
             this.lore = meta.getLore();
         }
     }
-    public PlayerSaveLeatherArmorMeta() {
+    public PlayerSaveLeatherArmorMeta() { //for use by JSON
 
     }
 }

@@ -47,16 +47,22 @@ public class PlayerSave {
     @JsonIgnore
     private Player pHold;
     
-    public PlayerSave (Location loc, ItemStack[] is, ItemStack[] is2){
+    public PlayerSave (Location loc, ItemStack[] is, ItemStack[] is2){ //for use in code
         lastLoc = new PlayerSaveLocation(loc);
         for(ItemStack i : is)
             mainInven.add(new PlayerSaveItemStack(i));
         armorInven = new PlayerSaveArmor(is2);
         Xp=0;
     }
-    public PlayerSave(){
+    public PlayerSave(){ //for use by JSON
         
     }
+        
+    /**
+     * sets PlayerSave to Player
+     * @param p The player whose player should be copied
+     * @return If the process succeeded
+     */
     @JsonIgnore
     public boolean Imprint(Player p){ //sets PlayerSave to Player
         Xp = p.getExp();
@@ -69,6 +75,10 @@ public class PlayerSave {
         lastLoc = new PlayerSaveLocation(p.getLocation());
         return true;
     }
+    /**
+     * sets Player to PlayerSave
+     * @param p The player who should be set to the save
+     */
     @JsonIgnore
     public void SetImprint(Player p){ //sets Player to PlayerSave
         p.getInventory().clear();

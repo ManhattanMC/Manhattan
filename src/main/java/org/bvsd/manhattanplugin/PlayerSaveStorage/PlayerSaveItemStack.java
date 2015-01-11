@@ -53,7 +53,7 @@ public class PlayerSaveItemStack {
     @Getter @Setter
     private PlayerSaveEnchantmentMeta enchantmentMeta;
 
-    public PlayerSaveItemStack(ItemStack i) {
+    public PlayerSaveItemStack(ItemStack i) {//for use in code
         if (i == null) {
             this.material = Material.AIR.name();
             this.amount = 1;
@@ -80,9 +80,13 @@ public class PlayerSaveItemStack {
             }
         }
     }
-    public PlayerSaveItemStack(){
+    public PlayerSaveItemStack(){ //for use by JSON
         
     }
+    /**
+     * Get a bukkit copy of this object
+     * @return  A bukkit ItemStack object of this object
+     */
     public ItemStack toItemStack() {
         ItemStack out = new ItemStack(Material.valueOf(material));
         out.setAmount(amount);

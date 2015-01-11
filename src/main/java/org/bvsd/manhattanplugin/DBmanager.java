@@ -30,7 +30,9 @@ public class DBmanager {
     public static File PSF = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "PlayerSaves");
     
     public static ArrayList<String> vanished = new ArrayList<>();
-
+    /**
+     * Saves all the playerdats through JSON
+     */
     public static void SavePlayers(){
         if(!PSF.exists()){
             PSF.mkdirs();
@@ -53,6 +55,10 @@ public class DBmanager {
             }
         }
     }
+    /**
+     * Saves the given playerdat through JSON
+     * @param name the players name
+     */
     public static void SavePlayer(String name){
         if(!PSF.exists()){
             PSF.mkdirs();
@@ -73,6 +79,10 @@ public class DBmanager {
                 }
             }
     }
+    /**
+     * Loads the player's dat through JSON
+     * @param pName The players name
+     */
     public static void LoadPlayers(String pName){
         
         if(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat").exists()){
@@ -94,6 +104,9 @@ public class DBmanager {
     ///Done
     //with
     //player load
+    /**
+     * Saves all the Death Games data
+     */
     public static void SaveDG(){
         try {
                 ManhattanPlugin.dg = ManhattanPlugin.JSon.readValue(new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
@@ -103,6 +116,9 @@ public class DBmanager {
             System.out.println("IO ERROR");
         }
     }
+    /**
+     * Loads all the Death Games data
+     */
     public static void LoadDG(){
         if(!new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat").exists()){
             DeathGame.DGplayers = new ArrayList<>();
@@ -119,6 +135,9 @@ public class DBmanager {
             }
         }
     }
+    /**
+     * Saves all the Hostile Zones
+     */
     public static void SaveHZones(){
         File base = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
         if(!base.exists()){
@@ -143,6 +162,9 @@ public class DBmanager {
             }
         }
     }
+    /**
+     * Loads all the Hostile Zones
+     */
     public static void LoadHZones(){
         File base = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
         for(File f:base.listFiles()){

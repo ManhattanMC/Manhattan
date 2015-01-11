@@ -28,13 +28,13 @@ public class PlayerSaveData{
     @Getter @Setter
     @JsonIgnore
     public int money = 0;
-    public PlayerSaveData(boolean real){
+    public PlayerSaveData(boolean real){ //for use in code
         if(!real){
             SurvivalSave = new PlayerSave(ManhattanPlugin.SurvivalWorld.getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
             CreativeSave = new PlayerSave(ManhattanPlugin.CreativeWorld.getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
         }
     }
-    public PlayerSaveData(){
+    public PlayerSaveData(){//for use by JSON
         
     }
 }

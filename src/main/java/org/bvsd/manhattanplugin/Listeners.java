@@ -32,6 +32,11 @@ import org.bukkit.inventory.ItemStack;
  * @author Donovan
  */
 public class Listeners implements Listener{
+    /**
+     * Called when a player joins the server (duh)
+     * used in this case to load their playerdat 
+     * so it can be used for worldjump 
+     */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
@@ -41,6 +46,11 @@ public class Listeners implements Listener{
             ManhattanPlugin.oldTargets.remove(p.getName());
         }
     }
+    /**
+     * Called when a player picks up an item (duh)
+     * used to make vanished players unable to
+     * pick up items (which would ruin their invis)
+     */
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent e){
         Player p = e.getPlayer();
@@ -48,6 +58,11 @@ public class Listeners implements Listener{
             e.setCancelled(true);
         }
     }
+    /**
+     * Called when a player tries to open a chest (duh)
+     * This is used to stop players from moving item
+     * from creative to survival via ender chests
+     */
     @EventHandler
     public void blockChestInterract(PlayerInteractEvent e) {
     Block t = e.getClickedBlock();
@@ -59,12 +74,22 @@ public class Listeners implements Listener{
             }
         }
     }
+    /**
+     * Called when an entity, (item, mod, ect.), changes worlds via a portal (duh)
+     * stops that item from creative to survival trick through portals that max
+     * showed me
+     */
     @EventHandler
     public void onEntityPortal(EntityPortalEvent e){
         if(e.getFrom().getWorld().equals(ManhattanPlugin.CreativeWorld)){
             e.getEntity().remove();
         }
     }
+    /**
+     * Called when a player changes worlds (duh)
+     * makes sure that the player is in the right
+     * game mode after worldjump
+     */
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
@@ -86,6 +111,10 @@ public class Listeners implements Listener{
             }
         }
     }
+    /**
+     * Called when an entity takes damage (duh)
+     * works with the DeathGames to stop pvp
+     */
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e){
         final Entity damager = e.getDamager();
@@ -152,6 +181,10 @@ public class Listeners implements Listener{
             }
         }
     }
+    /**
+     * Called when a player sends a command (comes before the onCommand)
+     * used to make tp safer for mods
+     */
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
         Player p = e.getPlayer();
@@ -163,6 +196,10 @@ public class Listeners implements Listener{
             }
         }
     }
+    /**
+     * Called when the server saves the world (duh)
+     * synchronises world save with data file save
+     */
     @EventHandler
     public void onWorldSave(WorldSaveEvent e){
         DBmanager.SavePlayers();

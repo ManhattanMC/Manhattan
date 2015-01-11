@@ -38,15 +38,19 @@ public class PlayerSaveArmor {
     @Getter @Setter
     private PlayerSaveItemStack Boot;
     
-    public PlayerSaveArmor(ItemStack[] is){
+    public PlayerSaveArmor(ItemStack[] is){ //for code use
         Helm = new PlayerSaveItemStack(is[3]);
         Chest = new PlayerSaveItemStack(is[2]);
         Leg = new PlayerSaveItemStack(is[1]);
         Boot = new PlayerSaveItemStack(is[0]);
     }
-    public PlayerSaveArmor(){
+    public PlayerSaveArmor(){ // for use by JSON
         
     }
+    /**
+     * sets Player armor to this save
+     * @param p The player who should be set to the save
+     */
     public void GiveTo(Player p){
         p.getInventory().setHelmet(Helm.toItemStack());
         p.getInventory().setChestplate(Chest.toItemStack());

@@ -47,7 +47,7 @@ public class DeathGame {
     @Getter @Setter
     public static PlayerSaveItemStack[] Gear;
     
-    public DeathGame(ItemStack[] Gear){
+    public DeathGame(ItemStack[] Gear){ // used in code
         Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
         long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
         Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.plugin, new Runnable() {
@@ -85,7 +85,7 @@ public class DeathGame {
             }
         }, seconds*20, 24 * (60 * 60 * 20));
     }
-    public DeathGame(){
+    public DeathGame(){ // used by JSON
         Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
         long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
         Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.plugin, new Runnable() {
@@ -123,7 +123,7 @@ public class DeathGame {
             }
         }, seconds*20, 24 * (60 * 60 * 20));
     }
-    public static void NewTarget(){
+    public static void NewTarget(){ // wip
         
     }
 }

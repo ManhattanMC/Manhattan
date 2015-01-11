@@ -42,7 +42,7 @@ class PlayerSaveBookMeta {
     @Setter
     private List<String> lore;
 
-    public PlayerSaveBookMeta(BookMeta meta) {
+    public PlayerSaveBookMeta(BookMeta meta) {//for use in code
         this.author = meta.getAuthor();
         this.pages = meta.getPages();
         this.title = meta.getTitle();
@@ -51,7 +51,7 @@ class PlayerSaveBookMeta {
         }
     }
 
-    public PlayerSaveBookMeta() {
+    public PlayerSaveBookMeta() {//for use by JSON
 
     }
 }

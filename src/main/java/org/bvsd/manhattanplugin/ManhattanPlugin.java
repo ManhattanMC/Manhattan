@@ -25,6 +25,9 @@ public class ManhattanPlugin extends JavaPlugin{
     public static World CreativeWorld;
     public static World SurvivalWorld;
     public static DeathGame dg;
+    /**
+     * The function called by the server to enable this plugin, should not be called directly
+     */
     @Override
     public void onEnable(){
         this.getConfig().options().copyDefaults(true);
@@ -50,6 +53,9 @@ public class ManhattanPlugin extends JavaPlugin{
         
         DBmanager.vanished.add("none");
     }
+    /**
+     * The function called by the server to disable this plugin, should not be called directly
+     */
     @Override
     public void onDisable(){
         DBmanager.SavePlayers();
