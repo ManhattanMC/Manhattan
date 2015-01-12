@@ -1,3 +1,5 @@
 worlds:
 - S-Main
 - C-Main
+Econ:
+  Enabled: false

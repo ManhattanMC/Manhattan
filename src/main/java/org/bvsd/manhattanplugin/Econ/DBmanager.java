@@ -16,40 +16,12 @@
  * 
  * 
  */
-
-package org.bvsd.manhattanplugin.PlayerSaveStorage;
-
-import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
+package org.bvsd.manhattanplugin.Econ;
 
 /**
  *
  * @author Donovan
  */
-class PlayerSaveLeatherArmorMeta {
+public class DBmanager {
     
-    @Getter
-    @Setter
-    private int rgb;
-    @Getter
-    @Setter
-    private String displayName;
-    @Getter
-    @Setter
-    private List<String> lore;
-
-    public PlayerSaveLeatherArmorMeta(LeatherArmorMeta meta) {//for use in code
-        this.rgb = meta.getColor().asRGB();
-        if (meta.hasDisplayName()) {
-            this.displayName = meta.getDisplayName();
-        }
-        if (meta.hasLore()) {
-            this.lore = meta.getLore();
-        }
-    }
-    public PlayerSaveLeatherArmorMeta() { //for use by JSON
-
-    }
 }

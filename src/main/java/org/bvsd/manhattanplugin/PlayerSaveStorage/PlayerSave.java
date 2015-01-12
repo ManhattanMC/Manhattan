@@ -26,7 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bvsd.manhattanplugin.mms;
+import org.bvsd.manhattanplugin.ManhattanPlugin;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -47,16 +47,22 @@ public class PlayerSave {
     @JsonIgnore
     private Player pHold;
     
-    public PlayerSave (Location loc, ItemStack[] is, ItemStack[] is2){
+    public PlayerSave (Location loc, ItemStack[] is, ItemStack[] is2){ //for use in code
         lastLoc = new PlayerSaveLocation(loc);
         for(ItemStack i : is)
             mainInven.add(new PlayerSaveItemStack(i));
         armorInven = new PlayerSaveArmor(is2);
         Xp=0;
     }
-    public PlayerSave(){
+    public PlayerSave(){ //for use by JSON
         
     }
+        
+    /**
+     * sets PlayerSave to Player
+     * @param p The player whose player should be copied
+     * @return If the process succeeded
+     */
     @JsonIgnore
     public boolean Imprint(Player p){ //sets PlayerSave to Player
         Xp = p.getExp();
@@ -69,6 +75,10 @@ public class PlayerSave {
         lastLoc = new PlayerSaveLocation(p.getLocation());
         return true;
     }
+    /**
+     * sets Player to PlayerSave
+     * @param p The player who should be set to the save
+     */
     @JsonIgnore
     public void SetImprint(Player p){ //sets Player to PlayerSave
         p.getInventory().clear();
@@ -76,7 +86,7 @@ public class PlayerSave {
         p.setExp(Xp);
         p.setLevel(lvl);
         pHold = p;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(mms.plugin, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ManhattanPlugin.plugin, new Runnable() {
             @Override
             public void run(){
                 for (PlayerSaveItemStack i : mainInven) {

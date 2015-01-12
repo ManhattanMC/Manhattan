@@ -6,35 +6,28 @@
 
 package org.bvsd.manhattanplugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.block.Sign;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
 
 /**
  *
  * @author Donovan
  */
-public class mms extends JavaPlugin{
-    public static mms plugin;
+public class ManhattanPlugin extends JavaPlugin{
+    public static ManhattanPlugin plugin;
     public static HashMap<String, Integer> oldTargets = new HashMap<>();
     public static ObjectMapper JSon;
     public static World CreativeWorld;
     public static World SurvivalWorld;
     public static DeathGame dg;
+    /**
+     * The function called by the server to enable this plugin, should not be called directly
+     */
     @Override
     public void onEnable(){
         this.getConfig().options().copyDefaults(true);
@@ -60,6 +53,9 @@ public class mms extends JavaPlugin{
         
         DBmanager.vanished.add("none");
     }
+    /**
+     * The function called by the server to disable this plugin, should not be called directly
+     */
     @Override
     public void onDisable(){
         DBmanager.SavePlayers();

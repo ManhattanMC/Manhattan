@@ -1,8 +1,9 @@
 name: Manhattan Plugin
-main: org.bvsd.manhattanplugin.mms
+main: org.bvsd.manhattanplugin.ManhattanPlugin
 version: 0.1
 description: helps with the Manhattan bukkit server
 author: DonoA
+authors: [DonoA]
 commands:
   WorldJump:
     description: jumps to a new world

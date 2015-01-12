@@ -42,7 +42,7 @@ public class PlayerSaveLocation {
     @Getter @Setter
     private String world;
 
-    public PlayerSaveLocation(Location loc) {
+    public PlayerSaveLocation(Location loc) {//for use in code
         this.x = loc.getX();
         this.y = loc.getY();
         this.z = loc.getZ();
@@ -51,10 +51,13 @@ public class PlayerSaveLocation {
         this.world = loc.getWorld().getName();
     }
     
-    public PlayerSaveLocation() {
+    public PlayerSaveLocation() { //for use by JSON
         
     }
-
+    /**
+     * Get a bukkit copy of this object
+     * @return  A bukkit Location object of this object
+     */
     public Location toLocation() {
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }

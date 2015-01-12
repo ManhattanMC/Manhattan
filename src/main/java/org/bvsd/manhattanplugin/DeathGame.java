@@ -47,10 +47,10 @@ public class DeathGame {
     @Getter @Setter
     public static PlayerSaveItemStack[] Gear;
     
-    public DeathGame(ItemStack[] Gear){
+    public DeathGame(ItemStack[] Gear){ // used in code
         Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
         long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(mms.plugin, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.plugin, new Runnable() {
             @Override
             public void run() {
                 Bukkit.broadcastMessage("Selecting new DeathGames Target...");
@@ -58,17 +58,55 @@ public class DeathGame {
                     if(!Bukkit.getPlayer(DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                         Bukkit.getPlayer(DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                        if(mms.oldTargets.containsKey(DGtarget)){
-                            mms.oldTargets.put(DGtarget, mms.oldTargets.get(DGtarget)+1);
+                        if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
+                            ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
                         }else{
-                            mms.oldTargets.put(DGtarget, 1);
+                            ManhattanPlugin.oldTargets.put(DGtarget, 1);
                         }
                     }
                 }else{
-                                            if(mms.oldTargets.containsKey(DGtarget)){
-                            mms.oldTargets.put(DGtarget, mms.oldTargets.get(DGtarget)+1);
+                    if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
+                        ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
+                    }else{
+                        ManhattanPlugin.oldTargets.put(DGtarget, 1);
+                    }
+                }
+                Random gen = new Random();
+                String ntar = DGplayers.get((int) (gen.nextInt(DGplayers.size())));
+                while(ntar.equals(DGtarget)&&DGplayers.size()>1){
+                    ntar = DGplayers.get((int) (gen.nextInt(DGplayers.size())));
+                }
+                DGtarget = ntar;
+                DGsign.getBlock().setType(Material.SIGN_POST);
+                Sign DS = (Sign)DGsign.getBlock().getState();
+                DS.setLine(1, ChatColor.AQUA + "Death Games:");
+                DS.setLine(2, ChatColor.BLUE + DGtarget);
+                DS.update();
+            }
+        }, seconds*20, 24 * (60 * 60 * 20));
+    }
+    public DeathGame(){ // used by JSON
+        Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
+        long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.plugin, new Runnable() {
+            @Override
+            public void run() {
+                Bukkit.broadcastMessage("Selecting new DeathGames Target...");
+                if(Bukkit.getOfflinePlayer(DGtarget).isOnline()){
+                    if(!Bukkit.getPlayer(DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
+                        Bukkit.getPlayer(DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
+                    }else{
+                        if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
+                            ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
                         }else{
-                            mms.oldTargets.put(DGtarget, 1);
+                            ManhattanPlugin.oldTargets.put(DGtarget, 1);
+                        }
+                    }
+                }else{
+                                            if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
+                            ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
+                        }else{
+                            ManhattanPlugin.oldTargets.put(DGtarget, 1);
                         }
                 }
                 Random gen = new Random();
@@ -85,45 +123,7 @@ public class DeathGame {
             }
         }, seconds*20, 24 * (60 * 60 * 20));
     }
-    public DeathGame(){
-        Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
-        long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(mms.plugin, new Runnable() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage("Selecting new DeathGames Target...");
-                if(Bukkit.getOfflinePlayer(DGtarget).isOnline()){
-                    if(!Bukkit.getPlayer(DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
-                        Bukkit.getPlayer(DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
-                    }else{
-                        if(mms.oldTargets.containsKey(DGtarget)){
-                            mms.oldTargets.put(DGtarget, mms.oldTargets.get(DGtarget)+1);
-                        }else{
-                            mms.oldTargets.put(DGtarget, 1);
-                        }
-                    }
-                }else{
-                                            if(mms.oldTargets.containsKey(DGtarget)){
-                            mms.oldTargets.put(DGtarget, mms.oldTargets.get(DGtarget)+1);
-                        }else{
-                            mms.oldTargets.put(DGtarget, 1);
-                        }
-                }
-                Random gen = new Random();
-                String ntar = DGplayers.get((int) (gen.nextInt(DGplayers.size())));
-                while(ntar.equals(DGtarget)&&DGplayers.size()>1){
-                    ntar = DGplayers.get((int) (gen.nextInt(DGplayers.size())));
-                }
-                DGtarget = ntar;
-                DGsign.getBlock().setType(Material.SIGN_POST);
-                Sign DS = (Sign)DGsign.getBlock().getState();
-                DS.setLine(1, ChatColor.AQUA + "Death Games:");
-                DS.setLine(2, ChatColor.BLUE + DGtarget);
-                DS.update();
-            }
-        }, seconds*20, 24 * (60 * 60 * 20));
-    }
-    public static void NewTarget(){
+    public static void NewTarget(){ // wip
         
     }
 }
