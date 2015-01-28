@@ -40,6 +40,7 @@ public class ManhattanPlugin extends JavaPlugin{
 //        dg = new DeathGame();
         CreativeWorld = Bukkit.getWorld("C-Main");
         SurvivalWorld = Bukkit.getWorld("S-Main");
+        
         getCommand("worldjump").setExecutor(new Commands());
         getCommand("deathgames").setExecutor(new Commands());
         getCommand("vanish").setExecutor(new Commands());
