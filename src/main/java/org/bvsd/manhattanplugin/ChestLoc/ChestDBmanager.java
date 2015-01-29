@@ -18,10 +18,19 @@
  */
 package org.bvsd.manhattanplugin.ChestLoc;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bvsd.manhattanplugin.DBmanager;
+import org.bvsd.manhattanplugin.ManhattanPlugin;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -37,10 +46,10 @@ public class ChestDBmanager {
     
     public static class Request{
         
-        @Getter
+        @Getter @JsonIgnore
         private UUID req;
         
-        @Getter
+        @Getter @JsonIgnore
         private ChestLocation cl;
         
         public Request(ChestLocation cl, UUID req){
@@ -48,4 +57,36 @@ public class ChestDBmanager {
             this.cl = cl;
         }
     }
+    
+    public static void SaveChests(){
+        boolean successful = true;
+        File NLoc = new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + "ChestUtil.savedat.new");
+        File OLoc = new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + "ChestUtil.savedat");
+        try {
+            ManhattanPlugin.getJSon().writeValue(NLoc, ChestDB);
+        } catch (IOException ex) {
+            successful = false;
+        } finally {
+            if (successful) {
+                if (OLoc.exists()) {
+                    OLoc.delete();
+                }
+                NLoc.renameTo(OLoc);
+            }
+        }
+    }
+    
+    public static void LoadChests(){
+        File Loc = new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + "ChestUtil.savedat");
+        try {
+            ChestDB = ManhattanPlugin.getJSon().readValue(Loc, HashMap.class);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            System.out.println("IO ERROR");
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
 }

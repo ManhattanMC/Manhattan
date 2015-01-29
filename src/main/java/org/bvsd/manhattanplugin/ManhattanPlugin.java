@@ -26,10 +26,11 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 
 /**
  *
@@ -55,7 +56,9 @@ public class ManhattanPlugin extends JavaPlugin{
     @Override
     public void onEnable(){
         this.getConfig().options().copyDefaults(true);
-        JSon = new ObjectMapper();//.configure(SerializationConfig.Feature.INDENT_OUTPUT, false);
+        JSon = new ObjectMapper()
+                .configure(SerializationConfig.Feature.INDENT_OUTPUT, true)
+                .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         if(this.getConfig().contains("worlds")){
             for(String s : this.getConfig().getStringList("worlds")){
                 Bukkit.getServer().getWorlds().add(Bukkit.getServer().createWorld(new WorldCreator(s)));
