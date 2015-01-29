@@ -1,7 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of ManhattanPlugin.
+ * 
+ * ManhattanPlugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * ManhattanPlugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with ManhattanPlugin.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
  */
 
 package org.bvsd.manhattanplugin;
@@ -48,13 +61,13 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         Player player = (Player) cs;
         //Vanish
         if(cmd.getName().equalsIgnoreCase("vanish")&&player.isOp()){
-            if(!DBmanager.vanished.contains(player.getName())){
+            if(!DBmanager.getVanished().contains(player.getName())){
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647 , 2));
                 player.getWorld().playEffect(player.getLocation(),Effect.MOBSPAWNER_FLAMES,4);
-                DBmanager.vanished.add(player.getName());
+                DBmanager.getVanished().add(player.getName());
             }else{
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
-                DBmanager.vanished.remove(player.getName());
+                DBmanager.getVanished().remove(player.getName());
             }
             return true;
         }
@@ -63,16 +76,16 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         if(cmd.getName().equalsIgnoreCase("HZone")){
             if(args.length > 0){
                 if(args[0].equalsIgnoreCase("add")&&args.length>2){
-                    DBmanager.HZones.add(new HostileZone(player.getLocation(), Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+                    DBmanager.getHZones().add(new HostileZone(player.getLocation(), Integer.parseInt(args[1]), Integer.parseInt(args[2])));
                 }else if(args[0].equalsIgnoreCase("remove")){
-                    for(HostileZone z:DBmanager.HZones){
+                    for(HostileZone z:DBmanager.getHZones()){
                         if(z.inZone(player.getLocation())){
-                            DBmanager.HZones.remove(z);
+                            DBmanager.getHZones().remove(z);
                         }
                     }
                 }
             }else if(player.hasPermission("group.mod")){
-                player.sendMessage(String.valueOf(DBmanager.HZones));
+                player.sendMessage(String.valueOf(DBmanager.getHZones()));
             }
         }
         //
@@ -115,17 +128,17 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
                     if(!Bukkit.getPlayer(DeathGame.DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                         Bukkit.getPlayer(DeathGame.DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                        if(ManhattanPlugin.oldTargets.containsKey(DeathGame.DGtarget)){
-                            ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, ManhattanPlugin.oldTargets.get(DeathGame.DGtarget)+1);
+                        if(ManhattanPlugin.getOldTargets().containsKey(DeathGame.DGtarget)){
+                            ManhattanPlugin.getOldTargets().put(DeathGame.DGtarget, ManhattanPlugin.getOldTargets().get(DeathGame.DGtarget)+1);
                         }else{
-                            ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, 1);
+                            ManhattanPlugin.getOldTargets().put(DeathGame.DGtarget, 1);
                         }
                     }
                 }else{
-                    if(ManhattanPlugin.oldTargets.containsKey(DeathGame.DGtarget)){
-                        ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, ManhattanPlugin.oldTargets.get(DeathGame.DGtarget)+1);
+                    if(ManhattanPlugin.getOldTargets().containsKey(DeathGame.DGtarget)){
+                        ManhattanPlugin.getOldTargets().put(DeathGame.DGtarget, ManhattanPlugin.getOldTargets().get(DeathGame.DGtarget)+1);
                     }else{
-                        ManhattanPlugin.oldTargets.put(DeathGame.DGtarget, 1);
+                        ManhattanPlugin.getOldTargets().put(DeathGame.DGtarget, 1);
                     }
                 }
                 Random gen = new Random();
@@ -145,8 +158,8 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         }
         //WorldJump
         if(cmd.getName().equalsIgnoreCase("worldjump")){
-            PlayerSaveData pd = DBmanager.Playerdats.get(player.getName());
-            if(player.getLocation().getWorld().equals(ManhattanPlugin.CreativeWorld)){
+            PlayerSaveData pd = DBmanager.getPlayerdats().get(player.getName());
+            if(player.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
                 pd.CreativeSave.Imprint(player);
                 if(!player.isOp()){
                     for(PotionEffect effect : player.getActivePotionEffects()){
@@ -155,7 +168,7 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
                 }
                 pd.SurvivalSave.SetImprint(player);
                 return true;
-            }else if(player.getLocation().getWorld().getName().contains(ManhattanPlugin.SurvivalWorld.getName())){
+            }else if(player.getLocation().getWorld().getName().contains(ManhattanPlugin.getSurvivalWorld().getName())){
                 pd.SurvivalSave.Imprint(player);
                 pd.CreativeSave.SetImprint(player);
                 return true;

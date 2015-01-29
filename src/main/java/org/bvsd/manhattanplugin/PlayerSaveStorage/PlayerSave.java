@@ -20,6 +20,7 @@
 package org.bvsd.manhattanplugin.PlayerSaveStorage;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -86,7 +87,7 @@ public class PlayerSave {
         p.setExp(Xp);
         p.setLevel(lvl);
         pHold = p;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ManhattanPlugin.plugin, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ManhattanPlugin.getPlugin(), new Runnable() {
             @Override
             public void run(){
                 for (PlayerSaveItemStack i : mainInven) {

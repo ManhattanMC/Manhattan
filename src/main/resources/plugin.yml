@@ -19,3 +19,7 @@ commands:
   Vanish:
     description: become invisible
     usage: /vanish
+permissions:
+  ManhattanPlugin.Mod:
+    default: op
+    description: permissions for Mods.

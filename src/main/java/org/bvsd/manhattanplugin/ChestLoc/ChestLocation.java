@@ -16,43 +16,43 @@
  * 
  * 
  */
+package org.bvsd.manhattanplugin.ChestLoc;
 
-package org.bvsd.manhattanplugin.HostileZones;
-
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveLocation;
 
 /**
  *
  * @author Donovan
  */
-public class HostileZone {
+public class ChestLocation {
     @Getter @Setter
-    private PlayerSaveLocation center;
+    private double x;
     @Getter @Setter
-    private int radius;
+    private double y;
     @Getter @Setter
-    private int difficulty;
+    private double z;
+    @Getter @Setter
+    private String world;
     
-    public HostileZone(Location c, int r, int d){ //constructor used in code
-        this.center = new PlayerSaveLocation(c);
-        this.radius = r;
-        this.difficulty = d;
+    public ChestLocation(Location loc) {//for use in code
+        this.x = loc.getX();
+        this.y = loc.getY();
+        this.z = loc.getZ();
+        this.world = loc.getWorld().getName();
     }
     
-    public HostileZone(){//constructor used for JSON load
+    public ChestLocation() { //for use by JSON
         
     }
-    
     /**
-     * Test if a location is in the Hostile Zone
-     * @param loc The location to test
-     * @return If the given location in the Hostile Zone
+     * Get a bukkit copy of this object
+     * @return  A bukkit Location object of this object
      */
-    public boolean inZone(Location loc){
-        double dist = Math.sqrt((loc.getX()-center.getX())*(loc.getX()-center.getX()) + (loc.getY()-center.getY())*(loc.getY()-center.getY()));
-        return (dist < radius);
+    public Location toLocation() {
+        return new Location(Bukkit.getWorld(world), x, y, z);
     }
 }

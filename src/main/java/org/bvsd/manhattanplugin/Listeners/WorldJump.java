@@ -1,10 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of ManhattanPlugin.
+ * 
+ * ManhattanPlugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * ManhattanPlugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with ManhattanPlugin.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
  */
 
-package org.bvsd.manhattanplugin;
+package org.bvsd.manhattanplugin.Listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -26,12 +39,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
+import org.bvsd.manhattanplugin.DBmanager;
+import org.bvsd.manhattanplugin.DeathGame;
+import org.bvsd.manhattanplugin.ManhattanPlugin;
 
 /**
  *
  * @author Donovan
  */
-public class Listeners implements Listener{
+public class WorldJump implements Listener{
     /**
      * Called when a player joins the server (duh)
      * used in this case to load their playerdat 
@@ -41,9 +58,9 @@ public class Listeners implements Listener{
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
         DBmanager.LoadPlayers(p.getName());
-        if(ManhattanPlugin.oldTargets.containsKey(p.getName())&&!p.getLocation().getWorld().equals(ManhattanPlugin.CreativeWorld)){
-            p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.oldTargets.get(p.getName())));
-            ManhattanPlugin.oldTargets.remove(p.getName());
+        if(ManhattanPlugin.getOldTargets().containsKey(p.getName())&&!p.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
+            p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.getOldTargets().get(p.getName())));
+            ManhattanPlugin.getOldTargets().remove(p.getName());
         }
     }
     /**
@@ -54,7 +71,7 @@ public class Listeners implements Listener{
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent e){
         Player p = e.getPlayer();
-        if(DBmanager.vanished.contains(p.getName())){
+        if(DBmanager.getVanished().contains(p.getName())){
             e.setCancelled(true);
         }
     }
@@ -68,7 +85,7 @@ public class Listeners implements Listener{
     Block t = e.getClickedBlock();
     Player p = e.getPlayer();
     if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if(t.getType().equals(Material.ENDER_CHEST)&&p.getWorld().equals(ManhattanPlugin.CreativeWorld)){
+            if(t.getType().equals(Material.ENDER_CHEST)&&p.getWorld().equals(ManhattanPlugin.getCreativeWorld())){
                 p.sendMessage(ChatColor.RED + "You cannot use ender chests in creative world (nice try though)");
                 e.setCancelled(true);
             }
@@ -81,7 +98,7 @@ public class Listeners implements Listener{
      */
     @EventHandler
     public void onEntityPortal(EntityPortalEvent e){
-        if(e.getFrom().getWorld().equals(ManhattanPlugin.CreativeWorld)){
+        if(e.getFrom().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
             e.getEntity().remove();
         }
     }
@@ -94,17 +111,17 @@ public class Listeners implements Listener{
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
         if(!p.isOp()){
-            if(p.getWorld().equals(ManhattanPlugin.CreativeWorld)){
+            if(p.getWorld().equals(ManhattanPlugin.getCreativeWorld())){
                 p.setGameMode(GameMode.CREATIVE);
             }else{
-                if(e.getFrom().equals(ManhattanPlugin.CreativeWorld)){
+                if(e.getFrom().equals(ManhattanPlugin.getCreativeWorld())){
                     p.getInventory().clear();
                     p.setExp(0);
                     p.setLevel(0);
                     p.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
-                    if(ManhattanPlugin.oldTargets.containsKey(p.getName())){
-                        p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.oldTargets.get(p.getName())));
-                        ManhattanPlugin.oldTargets.remove(p.getName());
+                    if(ManhattanPlugin.getOldTargets().containsKey(p.getName())){
+                        p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.getOldTargets().get(p.getName())));
+                        ManhattanPlugin.getOldTargets().remove(p.getName());
                     }
                 }
                 p.setGameMode(GameMode.SURVIVAL);
@@ -138,22 +155,24 @@ public class Listeners implements Listener{
                 }
             }
         }else if (damager instanceof Projectile && target instanceof Player){
-            final LivingEntity shooter = ((Projectile)damager).getShooter();
-            if (shooter instanceof Player){
-                Player att = (Player) shooter;
-                Player targ = (Player) target;
-                if(!targ.getName().equalsIgnoreCase(DeathGame.DGtarget)&&!att.getName().equalsIgnoreCase(DeathGame.DGtarget)){
-                        att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
-                        e.setCancelled(true);
-                }else if(targ.getName().equalsIgnoreCase(DeathGame.DGtarget)){
-                    if(!DeathGame.DGplayers.contains(att.getName())){
-                        att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
-                        e.setCancelled(true);
-                    }else if(att.getItemInHand().hasItemMeta()){
-                        if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-                            att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
-                            att.sendMessage(ChatColor.RED + "Use /deathgames equip");
+            if(((Projectile)damager).getShooter() instanceof LivingEntity){
+                final LivingEntity shooter = (LivingEntity) ((Projectile)damager).getShooter();
+                if (shooter instanceof Player){
+                    Player att = (Player) shooter;
+                    Player targ = (Player) target;
+                    if(!targ.getName().equalsIgnoreCase(DeathGame.DGtarget)&&!att.getName().equalsIgnoreCase(DeathGame.DGtarget)){
+                            att.sendMessage(ChatColor.RED + "You are in a no pvp zone");
                             e.setCancelled(true);
+                    }else if(targ.getName().equalsIgnoreCase(DeathGame.DGtarget)){
+                        if(!DeathGame.DGplayers.contains(att.getName())){
+                            att.sendMessage(ChatColor.RED + "You must be in the deathgames to do this, use /deathgames join");
+                            e.setCancelled(true);
+                        }else if(att.getItemInHand().hasItemMeta()){
+                            if(!att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                                att.sendMessage(ChatColor.RED + "You must use a DeathGames weapon!");
+                                att.sendMessage(ChatColor.RED + "Use /deathgames equip");
+                                e.setCancelled(true);
+                            }
                         }
                     }
                 }
@@ -168,14 +187,16 @@ public class Listeners implements Listener{
                 }
             }
         }else if(damager instanceof Projectile){
-            final LivingEntity shooter = ((Projectile)damager).getShooter();
-            if(shooter instanceof Player){
-                Player att = (Player) damager;
-                if(att.getItemInHand().hasItemMeta()){
-                    if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
-                        att.getInventory().removeItem(att.getItemInHand());
-                        att.sendMessage(ChatColor.RED + "Deathgames only");
-                        e.setCancelled(true);
+            if(((Projectile)damager).getShooter() instanceof LivingEntity){
+                final LivingEntity shooter = (LivingEntity) ((Projectile)damager).getShooter();
+                if(shooter instanceof Player){
+                    Player att = (Player) damager;
+                    if(att.getItemInHand().hasItemMeta()){
+                        if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
+                            att.getInventory().removeItem(att.getItemInHand());
+                            att.sendMessage(ChatColor.RED + "Deathgames only");
+                            e.setCancelled(true);
+                        }
                     }
                 }
             }
@@ -189,10 +210,10 @@ public class Listeners implements Listener{
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
         Player p = e.getPlayer();
         if(!p.isOp()&&e.getMessage().contains("tp")){
-            if(p.getLocation().getWorld().equals(ManhattanPlugin.CreativeWorld)){
-                DBmanager.Playerdats.get(p.getName()).CreativeSave.Imprint(p);
-            }else if(p.getLocation().getWorld().getName().contains(ManhattanPlugin.SurvivalWorld.getName())){
-                DBmanager.Playerdats.get(p.getName()).SurvivalSave.Imprint(p);
+            if(p.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
+                DBmanager.getPlayerdats().get(p.getName()).CreativeSave.Imprint(p);
+            }else if(p.getLocation().getWorld().getName().contains(ManhattanPlugin.getSurvivalWorld().getName())){
+                DBmanager.getPlayerdats().get(p.getName()).SurvivalSave.Imprint(p);
             }
         }
     }
