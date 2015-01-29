@@ -1,7 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of ManhattanPlugin.
+ * 
+ * ManhattanPlugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * ManhattanPlugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with ManhattanPlugin.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
  */
 
 package org.bvsd.manhattanplugin;
@@ -16,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 
 /**
@@ -23,13 +38,16 @@ import org.bukkit.Bukkit;
  * @author Donovan
  */
 public class DBmanager {
-    public static HashMap<String, PlayerSaveData> Playerdats = new HashMap<>();
+    @Getter
+    private static HashMap<String, PlayerSaveData> Playerdats = new HashMap<>();
     
-    public static List<HostileZone> HZones = new ArrayList<>();
+    @Getter
+    private static List<HostileZone> HZones = new ArrayList<>();
     
-    public static File PSF = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "PlayerSaves");
+    private static File PSF = new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + "PlayerSaves");
     
-    public static ArrayList<String> vanished = new ArrayList<>();
+    @Getter @Setter
+    private static ArrayList<String> vanished = new ArrayList<>();
     /**
      * Saves all the playerdats through JSON
      */
@@ -42,7 +60,7 @@ public class DBmanager {
             File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
             File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
             try {
-                ManhattanPlugin.JSon.writeValue(NLoc, Playerdats.get(name));
+                ManhattanPlugin.getJSon().writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
                 successful = false;
             } finally {
@@ -67,7 +85,7 @@ public class DBmanager {
             File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
             File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
             try {
-                ManhattanPlugin.JSon.writeValue(NLoc, Playerdats.get(name));
+                ManhattanPlugin.getJSon().writeValue(NLoc, Playerdats.get(name));
             } catch (IOException ex) {
                 successful = false;
             } finally {
@@ -88,7 +106,7 @@ public class DBmanager {
         if(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat").exists()){
             PlayerSaveData pd = null;
             try {
-                pd = ManhattanPlugin.JSon.readValue(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat"), PlayerSaveData.class);
+                pd = ManhattanPlugin.getJSon().readValue(new File(PSF.toString() + System.getProperty("file.separator") + Bukkit.getPlayer(pName).getUniqueId().toString() + ".playerdat"), PlayerSaveData.class);
                 System.out.println(PlayerSaveData.class);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
@@ -109,9 +127,9 @@ public class DBmanager {
      */
     public static void SaveDG(){
         try {
-                ManhattanPlugin.dg = ManhattanPlugin.JSon.readValue(new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
+                ManhattanPlugin.setDg(ManhattanPlugin.getJSon().readValue(new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class));
         } catch (FileNotFoundException ex) {
-                ManhattanPlugin.dg = new DeathGame();
+                ManhattanPlugin.setDg(new DeathGame());
         } catch (IOException ex) {
             System.out.println("IO ERROR");
         }
@@ -120,14 +138,14 @@ public class DBmanager {
      * Loads all the Death Games data
      */
     public static void LoadDG(){
-        if(!new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat").exists()){
+        if(!new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat").exists()){
             DeathGame.DGplayers = new ArrayList<>();
             DeathGame.DGtarget = "none";
-            DeathGame.DGsign = ManhattanPlugin.SurvivalWorld.getSpawnLocation();
+            DeathGame.DGsign = ManhattanPlugin.getSurvivalWorld().getSpawnLocation();
             return;
         }else{
             try {
-                DeathGame dg = ManhattanPlugin.JSon.readValue(new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
+                DeathGame dg = ManhattanPlugin.getJSon().readValue(new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator")+ "DeathGames.DGdat"), DeathGame.class);
             } catch (FileNotFoundException ex) {
                     Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -139,7 +157,7 @@ public class DBmanager {
      * Saves all the Hostile Zones
      */
     public static void SaveHZones(){
-        File base = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
+        File base = new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
         if(!base.exists()){
             base.mkdirs();
         }
@@ -149,7 +167,7 @@ public class DBmanager {
             File finish = new File(base + System.getProperty("file.separator") + "Zone-" + i + ".HZone");
             successful = true;
             try {
-                ManhattanPlugin.JSon.writeValue(start, DBmanager.HZones.get(i));
+                ManhattanPlugin.getJSon().writeValue(start, DBmanager.HZones.get(i));
             } catch (IOException ex) {
                 successful = false;
             } finally {
@@ -166,10 +184,10 @@ public class DBmanager {
      * Loads all the Hostile Zones
      */
     public static void LoadHZones(){
-        File base = new File(ManhattanPlugin.plugin.getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
+        File base = new File(ManhattanPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + "HostileZoneDB");
         for(File f:base.listFiles()){
             try {
-                HZones.add(ManhattanPlugin.JSon.readValue(f, HostileZone.class));
+                HZones.add(ManhattanPlugin.getJSon().readValue(f, HostileZone.class));
             } catch (FileNotFoundException ex) {
                     Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {

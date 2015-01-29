@@ -19,6 +19,7 @@
 
 package org.bvsd.manhattanplugin.HostileZones;
 
+import lombok.Getter;
 import org.bukkit.entity.Entity;
 
 /**
@@ -26,7 +27,8 @@ import org.bukkit.entity.Entity;
  * @author Donovan
  */
 public class Boss {
-    public Entity Master;
+    @Getter
+    private Entity Master;
     
     public Boss(){
         

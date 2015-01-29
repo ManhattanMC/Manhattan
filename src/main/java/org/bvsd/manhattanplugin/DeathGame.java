@@ -50,7 +50,7 @@ public class DeathGame {
     public DeathGame(ItemStack[] Gear){ // used in code
         Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
         long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.plugin, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.getPlugin(), new Runnable() {
             @Override
             public void run() {
                 Bukkit.broadcastMessage("Selecting new DeathGames Target...");
@@ -58,17 +58,17 @@ public class DeathGame {
                     if(!Bukkit.getPlayer(DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                         Bukkit.getPlayer(DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                        if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
-                            ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
+                        if(ManhattanPlugin.getOldTargets().containsKey(DGtarget)){
+                            ManhattanPlugin.getOldTargets().put(DGtarget, ManhattanPlugin.getOldTargets().get(DGtarget)+1);
                         }else{
-                            ManhattanPlugin.oldTargets.put(DGtarget, 1);
+                            ManhattanPlugin.getOldTargets().put(DGtarget, 1);
                         }
                     }
                 }else{
-                    if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
-                        ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
+                    if(ManhattanPlugin.getOldTargets().containsKey(DGtarget)){
+                        ManhattanPlugin.getOldTargets().put(DGtarget, ManhattanPlugin.getOldTargets().get(DGtarget)+1);
                     }else{
-                        ManhattanPlugin.oldTargets.put(DGtarget, 1);
+                        ManhattanPlugin.getOldTargets().put(DGtarget, 1);
                     }
                 }
                 Random gen = new Random();
@@ -88,7 +88,7 @@ public class DeathGame {
     public DeathGame(){ // used by JSON
         Calendar c = Calendar.getInstance();c.add(Calendar.DAY_OF_MONTH, 1);c.set(Calendar.HOUR_OF_DAY, 0);c.set(Calendar.MINUTE, 0);c.set(Calendar.SECOND, 0);c.set(Calendar.MILLISECOND, 0);
         long seconds = (c.getTimeInMillis()-System.currentTimeMillis())/1000;
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.plugin, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(ManhattanPlugin.getPlugin(), new Runnable() {
             @Override
             public void run() {
                 Bukkit.broadcastMessage("Selecting new DeathGames Target...");
@@ -96,17 +96,17 @@ public class DeathGame {
                     if(!Bukkit.getPlayer(DGtarget).getLocation().getWorld().getName().equalsIgnoreCase("C-Main")){
                         Bukkit.getPlayer(DGtarget).getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                     }else{
-                        if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
-                            ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
+                        if(ManhattanPlugin.getOldTargets().containsKey(DGtarget)){
+                            ManhattanPlugin.getOldTargets().put(DGtarget, ManhattanPlugin.getOldTargets().get(DGtarget)+1);
                         }else{
-                            ManhattanPlugin.oldTargets.put(DGtarget, 1);
+                            ManhattanPlugin.getOldTargets().put(DGtarget, 1);
                         }
                     }
                 }else{
-                                            if(ManhattanPlugin.oldTargets.containsKey(DGtarget)){
-                            ManhattanPlugin.oldTargets.put(DGtarget, ManhattanPlugin.oldTargets.get(DGtarget)+1);
+                                            if(ManhattanPlugin.getOldTargets().containsKey(DGtarget)){
+                            ManhattanPlugin.getOldTargets().put(DGtarget, ManhattanPlugin.getOldTargets().get(DGtarget)+1);
                         }else{
-                            ManhattanPlugin.oldTargets.put(DGtarget, 1);
+                            ManhattanPlugin.getOldTargets().put(DGtarget, 1);
                         }
                 }
                 Random gen = new Random();

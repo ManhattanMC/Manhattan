@@ -16,16 +16,36 @@
  * 
  * 
  */
+package org.bvsd.manhattanplugin.ChestLoc;
 
-package org.bvsd.manhattanplugin.Econ;
+import java.util.HashMap;
+import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
  * @author Donovan
  */
-class Plot {
+public class ChestDBmanager {
+    @Getter @Setter
+    private static HashMap<ChestLocation, ChestType> ChestDB = new HashMap<>();
     
-    public Plot(){
+    @Getter @Setter @JsonIgnore
+    private static HashMap<UUID, ChestDBmanager.Request> Waiting = new HashMap<>();
+    
+    public static class Request{
         
+        @Getter
+        private UUID req;
+        
+        @Getter
+        private ChestLocation cl;
+        
+        public Request(ChestLocation cl, UUID req){
+            this.req = req;
+            this.cl = cl;
+        }
     }
 }
