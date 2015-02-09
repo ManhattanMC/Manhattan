@@ -190,7 +190,7 @@ public class WorldJump implements Listener{
             if(((Projectile)damager).getShooter() instanceof LivingEntity){
                 final LivingEntity shooter = (LivingEntity) ((Projectile)damager).getShooter();
                 if(shooter instanceof Player){
-                    Player att = (Player) damager;
+                    Player att = (Player) shooter;
                     if(att.getItemInHand().hasItemMeta()){
                         if(att.getItemInHand().getItemMeta().getLore().contains("For use in the DeathGames only!")){
                             att.getInventory().removeItem(att.getItemInHand());
