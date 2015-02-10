@@ -167,10 +167,12 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
                     }
                 }
                 pd.SurvivalSave.SetImprint(player);
+                DBmanager.SavePlayer(player.getName());
                 return true;
             }else if(player.getLocation().getWorld().getName().contains(ManhattanPlugin.getSurvivalWorld().getName())){
                 pd.SurvivalSave.Imprint(player);
                 pd.CreativeSave.SetImprint(player);
+                DBmanager.SavePlayer(player.getName());
                 return true;
             }
             DBmanager.SavePlayer(player.getName());

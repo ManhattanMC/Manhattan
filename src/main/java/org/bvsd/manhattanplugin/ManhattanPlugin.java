@@ -77,7 +77,7 @@ public class ManhattanPlugin extends JavaPlugin{
         this.plugin = this;
         
         DBmanager.LoadDG();
-        DBmanager.LoadHZones();
+//        DBmanager.LoadHZones();
         
         DBmanager.getVanished().add("none");
         
