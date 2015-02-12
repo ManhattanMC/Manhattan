@@ -19,6 +19,8 @@
 
 package org.bvsd.manhattanplugin.Listeners;
 
+import java.util.Arrays;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -37,6 +39,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
@@ -61,6 +64,19 @@ public class WorldJump implements Listener{
         if(ManhattanPlugin.getOldTargets().containsKey(p.getName())&&!p.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
             p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.getOldTargets().get(p.getName())));
             ManhattanPlugin.getOldTargets().remove(p.getName());
+        }
+        for(String pName : DBmanager.getVanished()){
+            if(Bukkit.getOfflinePlayer(pName).isOnline()){
+                p.hidePlayer(Bukkit.getPlayer(pName));
+            }
+        }
+    }
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+        DBmanager.SavePlayer(e.getPlayer().getName());
+        DBmanager.getPlayerdats().remove(e.getPlayer().getName());
+        if(DBmanager.getVanished().contains(e.getPlayer().getName())){
+            e.setQuitMessage("");
         }
     }
     /**

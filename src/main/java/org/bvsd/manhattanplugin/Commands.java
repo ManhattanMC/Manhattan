@@ -62,12 +62,23 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         //Vanish
         if(cmd.getName().equalsIgnoreCase("vanish")&&player.isOp()){
             if(!DBmanager.getVanished().contains(player.getName())){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647 , 2));
-                player.getWorld().playEffect(player.getLocation(),Effect.MOBSPAWNER_FLAMES,4);
+                player.sendMessage(ChatColor.DARK_PURPLE + "Vanished! Poof!");
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    if(p != player)
+                        p.hidePlayer(player);
+                }
+                player.getWorld().playEffect(player.getLocation(),Effect.MOBSPAWNER_FLAMES, 4, 4);
                 DBmanager.getVanished().add(player.getName());
+                Bukkit.broadcastMessage(ChatColor.YELLOW + player.getName() + " left the game");
             }else{
-                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                player.sendMessage(ChatColor.DARK_PURPLE + "Unvanished! Poof!");
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    if(p != player)
+                        p.showPlayer(player);
+                }
+                player.getWorld().playEffect(player.getLocation(),Effect.MOBSPAWNER_FLAMES, 4, 4);
                 DBmanager.getVanished().remove(player.getName());
+                Bukkit.broadcastMessage(ChatColor.YELLOW + player.getName() + " joined the game");
             }
             return true;
         }
