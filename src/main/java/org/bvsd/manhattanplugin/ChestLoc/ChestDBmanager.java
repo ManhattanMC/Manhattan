@@ -37,7 +37,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 public class ChestDBmanager {
     @Getter @Setter
-    private static HashMap<ChestLocation, ChestType> ChestDB = new HashMap<>();
+    private static HashMap<String, ChestType> ChestDB = new HashMap<>();
     
     @Getter @Setter @JsonIgnore
     private static HashMap<UUID, ChestDBmanager.Request> Waiting = new HashMap<>();

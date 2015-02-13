@@ -19,6 +19,12 @@ commands:
   Vanish:
     description: become invisible
     usage: /vanish
+  Chest:
+    description: Edit chest settings
+    usage: |
+           /chest friend <add|remove|list|clear> <player>
+           /chest request <accept|ban>
+           /chest set <private|restricted|public>
 permissions:
   ManhattanPlugin.Mod:
     default: op

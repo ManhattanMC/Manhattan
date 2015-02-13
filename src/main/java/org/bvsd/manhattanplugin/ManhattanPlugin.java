@@ -28,6 +28,9 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bvsd.manhattanplugin.ChestLoc.ChestCommands;
+import org.bvsd.manhattanplugin.ChestLoc.ChestLock;
+import org.bvsd.manhattanplugin.Listeners.ChatHandle;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -71,9 +74,12 @@ public class ManhattanPlugin extends JavaPlugin{
         getCommand("worldjump").setExecutor(new Commands());
         getCommand("deathgames").setExecutor(new Commands());
         getCommand("vanish").setExecutor(new Commands());
+        getCommand("chest").setExecutor(new ChestCommands());
 //        getCommand("HZone").setExecutor(new Commands());
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new WorldJump(), this);
+        pm.registerEvents(new ChestLock(), this);
+        pm.registerEvents(new ChatHandle(), this);
         this.plugin = this;
         
         DBmanager.LoadDG();
