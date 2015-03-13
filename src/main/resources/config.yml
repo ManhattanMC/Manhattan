@@ -3,3 +3,5 @@ worlds:
 - C-Main
 Econ:
   Enabled: false
+ChestLock: false
+  

@@ -71,6 +71,7 @@ public class WorldJump implements Listener{
             }
         }
     }
+    
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
         DBmanager.SavePlayer(e.getPlayer().getName());
@@ -226,21 +227,6 @@ public class WorldJump implements Listener{
                         }
                     }
                 }
-            }
-        }
-    }
-    /**
-     * Called when a player sends a command (comes before the onCommand)
-     * used to make tp safer for mods
-     */
-    @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
-        Player p = e.getPlayer();
-        if(!p.isOp()&&e.getMessage().contains("tp")){
-            if(p.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
-                DBmanager.getPlayerdats().get(p.getName()).CreativeSave.Imprint(p);
-            }else if(p.getLocation().getWorld().getName().contains(ManhattanPlugin.getSurvivalWorld().getName())){
-                DBmanager.getPlayerdats().get(p.getName()).SurvivalSave.Imprint(p);
             }
         }
     }

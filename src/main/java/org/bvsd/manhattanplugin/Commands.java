@@ -169,24 +169,32 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         }
         //WorldJump
         if(cmd.getName().equalsIgnoreCase("worldjump")){
-            PlayerSaveData pd = DBmanager.getPlayerdats().get(player.getName());
-            if(player.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
-                pd.CreativeSave.Imprint(player);
-                if(!player.isOp()){
-                    for(PotionEffect effect : player.getActivePotionEffects()){
-                        player.removePotionEffect(effect.getType());
-                    }
-                }
-                pd.SurvivalSave.SetImprint(player);
-                DBmanager.SavePlayer(player.getName());
-                return true;
-            }else if(player.getLocation().getWorld().getName().contains(ManhattanPlugin.getSurvivalWorld().getName())){
-                pd.SurvivalSave.Imprint(player);
-                pd.CreativeSave.SetImprint(player);
-                DBmanager.SavePlayer(player.getName());
-                return true;
+            PlayerSaveData pd = null;
+            if(DBmanager.getPlayerdats().containsKey(player.getName())){
+                pd = DBmanager.getPlayerdats().get(player.getName());
+            }else{
+                pd = new PlayerSaveData();
             }
+            String WorldName = player.getLocation().getWorld().getName().replace("_nether", "").replace("_the_end", "");
+            String DestName = "";
+            if(args.length > 0){
+                DestName = args[0];
+            }else{
+                if(WorldName.equalsIgnoreCase(ManhattanPlugin.getCreativeWorld().getName())){
+                    DestName = ManhattanPlugin.getSurvivalWorld().getName();
+                }else{
+                    DestName = ManhattanPlugin.getCreativeWorld().getName();
+                }
+            }
+            pd.getSaves().get(WorldName).Imprint(player);
+            if(!player.isOp()){
+                for(PotionEffect effect : player.getActivePotionEffects()){
+                    player.removePotionEffect(effect.getType());
+                }
+            }
+            pd.getSaves().get(DestName).SetImprint(player);
             DBmanager.SavePlayer(player.getName());
+            return true;
         }
         return false;
     }
