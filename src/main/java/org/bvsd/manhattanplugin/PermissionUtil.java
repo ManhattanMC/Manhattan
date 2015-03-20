@@ -16,22 +16,17 @@
  * 
  * 
  */
+package org.bvsd.manhattanplugin;
 
-package org.bvsd.manhattanplugin.HostileZones;
-
-import lombok.Getter;
-import org.bukkit.entity.Monster;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  *
  * @author Donovan
  */
-public class Boss{
-    @Getter
-    private Monster Host;
+public class PermissionUtil {
     
-    public Boss(){
-        
-    }
+    public static final Permission mod = new Permission("manhattanplugin.mod", PermissionDefault.OP);
     
 }

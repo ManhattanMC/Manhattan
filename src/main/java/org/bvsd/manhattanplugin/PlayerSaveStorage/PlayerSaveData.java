@@ -20,6 +20,7 @@
 package org.bvsd.manhattanplugin.PlayerSaveStorage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,12 +35,16 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 public class PlayerSaveData{
 //        public char world;
+    @Getter @Setter @JsonIgnore
+    private HashMap<String, PlayerSave> Saves = new HashMap<>(); 
+    
+    @JsonIgnore
+    private PlayerSave CreativeSave;
+    @JsonIgnore
+    private PlayerSave SurvivalSave;
+    
     @Getter @Setter
-    public PlayerSave CreativeSave;
-    @Getter @Setter
-    public PlayerSave SurvivalSave;
-    @Getter @Setter
-    public boolean beenCreate = false;
+    private boolean beenCreate = false;
     
     @Getter @Setter
     private ArrayList<UUID> friends = new ArrayList<UUID>();
@@ -55,5 +60,11 @@ public class PlayerSaveData{
     }
     public PlayerSaveData(){//for use by JSON
         
+    }
+    public void setCreativeSave(PlayerSave ps){
+        Saves.put("C-Main", ps);
+    }
+    public void setSurvivalSave(PlayerSave ps){
+        Saves.put("S-Main", ps);
     }
 }

@@ -36,6 +36,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bvsd.manhattanplugin.HostileZones.HostileZone;
+import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSave;
 import org.bvsd.manhattanplugin.PlayerSaveStorage.PlayerSaveData;
 
 /**
@@ -60,11 +61,17 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         }
         Player player = (Player) cs;
         //Vanish
-        if(cmd.getName().equalsIgnoreCase("vanish")&&player.isOp()){
+        if(cmd.getName().equalsIgnoreCase("vanish")&&player.hasPermission(PermissionUtil.mod)){
             if(!DBmanager.getVanished().contains(player.getName())){
                 player.sendMessage(ChatColor.DARK_PURPLE + "Vanished! Poof!");
+                if(player.getName().length() > 14){
+                    player.setPlayerListName(ChatColor.BLUE + player.getName());
+                }else{
+                    String newName = player.getName().substring(0, 13);
+                    player.setPlayerListName(ChatColor.BLUE + newName);
+                }
                 for(Player p : Bukkit.getOnlinePlayers()){
-                    if(p != player)
+                    if(p != player && !p.hasPermission(PermissionUtil.mod))
                         p.hidePlayer(player);
                 }
                 player.getWorld().playEffect(player.getLocation(),Effect.MOBSPAWNER_FLAMES, 4, 4);
@@ -72,8 +79,9 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
                 Bukkit.broadcastMessage(ChatColor.YELLOW + player.getName() + " left the game");
             }else{
                 player.sendMessage(ChatColor.DARK_PURPLE + "Unvanished! Poof!");
+                player.setPlayerListName(null);
                 for(Player p : Bukkit.getOnlinePlayers()){
-                    if(p != player)
+                    if(p != player && !p.hasPermission(PermissionUtil.mod))
                         p.showPlayer(player);
                 }
                 player.getWorld().playEffect(player.getLocation(),Effect.MOBSPAWNER_FLAMES, 4, 4);
@@ -169,24 +177,37 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         }
         //WorldJump
         if(cmd.getName().equalsIgnoreCase("worldjump")){
-            PlayerSaveData pd = DBmanager.getPlayerdats().get(player.getName());
-            if(player.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
-                pd.CreativeSave.Imprint(player);
-                if(!player.isOp()){
-                    for(PotionEffect effect : player.getActivePotionEffects()){
-                        player.removePotionEffect(effect.getType());
-                    }
+            PlayerSaveData pd = null;
+            if(DBmanager.getPlayerdats().containsKey(player.getName())){
+                pd = DBmanager.getPlayerdats().get(player.getName());
+            }else{
+                pd = new PlayerSaveData();
+            }
+            String WorldName = player.getLocation().getWorld().getName().replace("_nether", "").replace("_the_end", "");
+            String DestName = "";
+            if(args.length > 0){
+                DestName = args[0];
+            }else{
+                if(WorldName.equalsIgnoreCase(ManhattanPlugin.getCreativeWorld().getName())){
+                    DestName = ManhattanPlugin.getSurvivalWorld().getName();
+                }else{
+                    DestName = ManhattanPlugin.getCreativeWorld().getName();
                 }
-                pd.SurvivalSave.SetImprint(player);
-                DBmanager.SavePlayer(player.getName());
-                return true;
-            }else if(player.getLocation().getWorld().getName().contains(ManhattanPlugin.getSurvivalWorld().getName())){
-                pd.SurvivalSave.Imprint(player);
-                pd.CreativeSave.SetImprint(player);
-                DBmanager.SavePlayer(player.getName());
-                return true;
+            }
+            pd.getSaves().get(WorldName).Imprint(player);
+            if(!player.isOp()){
+                for(PotionEffect effect : player.getActivePotionEffects()){
+                    player.removePotionEffect(effect.getType());
+                }
+            }
+            if(pd.getSaves().containsKey(DestName)){
+                pd.getSaves().get(DestName).SetImprint(player);
+            }else{
+                pd.getSaves().put(DestName, new PlayerSave(Bukkit.getWorld(DestName).getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)}));
+                pd.getSaves().get(DestName).SetImprint(player);
             }
             DBmanager.SavePlayer(player.getName());
+            return true;
         }
         return false;
     }

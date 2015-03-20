@@ -55,4 +55,9 @@ public class ChestLocation {
     public Location toLocation() {
         return new Location(Bukkit.getWorld(world), x, y, z);
     }
+    
+    @Override
+    public String toString(){
+        return x + " " + y + " " + z + " " + world;
+    }
 }

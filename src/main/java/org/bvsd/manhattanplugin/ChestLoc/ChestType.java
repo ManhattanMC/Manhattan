@@ -56,7 +56,7 @@ public class ChestType {
     
     public boolean canAccess(UUID uuid){
         Player p = Bukkit.getPlayer(uuid);
-        if(p.hasPermission("ManhattanPlugin.Mod") || approved.contains(uuid) || Sec == 1 || uuid.equals(owner)){
+        if(/*p.hasPermission("ManhattanPlugin.Mod") || */approved.contains(uuid) || Sec == 1 || uuid.equals(owner)){
             return true;
         }else if(banned.contains(uuid) || Sec == 3 || Sec == 2){
             return false;

@@ -46,6 +46,7 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bvsd.manhattanplugin.DBmanager;
 import org.bvsd.manhattanplugin.DeathGame;
 import org.bvsd.manhattanplugin.ManhattanPlugin;
+import org.bvsd.manhattanplugin.PermissionUtil;
 
 /**
  *
@@ -65,12 +66,17 @@ public class WorldJump implements Listener{
             p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.getOldTargets().get(p.getName())));
             ManhattanPlugin.getOldTargets().remove(p.getName());
         }
+         if(DBmanager.getVanished().contains(e.getPlayer().getName())){
+            e.setJoinMessage("");
+            p.setPlayerListName(ChatColor.BLUE + p.getName());
+        }
         for(String pName : DBmanager.getVanished()){
-            if(Bukkit.getOfflinePlayer(pName).isOnline()){
+            if(Bukkit.getOfflinePlayer(pName).isOnline() && !p.hasPermission(PermissionUtil.mod)){
                 p.hidePlayer(Bukkit.getPlayer(pName));
             }
         }
     }
+    
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
         DBmanager.SavePlayer(e.getPlayer().getName());
@@ -155,6 +161,9 @@ public class WorldJump implements Listener{
         if (damager instanceof Player && target instanceof Player){
             Player att = (Player) damager;
             Player targ = (Player) target;
+            if(att.isOp()){
+                return;
+            }
             if(!targ.getName().equalsIgnoreCase(DeathGame.DGtarget)&&!att.getName().equalsIgnoreCase(DeathGame.DGtarget)){
                 att.sendMessage(ChatColor.RED + "You are in a no pvp zone");//.toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString());
                 e.setCancelled(true);
@@ -223,21 +232,6 @@ public class WorldJump implements Listener{
                         }
                     }
                 }
-            }
-        }
-    }
-    /**
-     * Called when a player sends a command (comes before the onCommand)
-     * used to make tp safer for mods
-     */
-    @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
-        Player p = e.getPlayer();
-        if(!p.isOp()&&e.getMessage().contains("tp")){
-            if(p.getLocation().getWorld().equals(ManhattanPlugin.getCreativeWorld())){
-                DBmanager.getPlayerdats().get(p.getName()).CreativeSave.Imprint(p);
-            }else if(p.getLocation().getWorld().getName().contains(ManhattanPlugin.getSurvivalWorld().getName())){
-                DBmanager.getPlayerdats().get(p.getName()).SurvivalSave.Imprint(p);
             }
         }
     }
