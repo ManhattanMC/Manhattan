@@ -73,8 +73,7 @@ public class ManhattanPlugin extends JavaPlugin{
         getCommand("worldjump").setExecutor(new Commands());
         getCommand("deathgames").setExecutor(new Commands());
         getCommand("vanish").setExecutor(new Commands());
-        
-        getCommand("chest").setExecutor(new ChestCommands());
+        getCommand("tpm").setExecutor(new TPmCommand());
 //        getCommand("HZone").setExecutor(new Commands());
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new WorldJump(), this);

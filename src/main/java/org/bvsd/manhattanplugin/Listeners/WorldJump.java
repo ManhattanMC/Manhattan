@@ -46,6 +46,7 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bvsd.manhattanplugin.DBmanager;
 import org.bvsd.manhattanplugin.DeathGame;
 import org.bvsd.manhattanplugin.ManhattanPlugin;
+import org.bvsd.manhattanplugin.PermissionUtil;
 
 /**
  *
@@ -65,8 +66,12 @@ public class WorldJump implements Listener{
             p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.getOldTargets().get(p.getName())));
             ManhattanPlugin.getOldTargets().remove(p.getName());
         }
+         if(DBmanager.getVanished().contains(e.getPlayer().getName())){
+            e.setJoinMessage("");
+            p.setPlayerListName(ChatColor.BLUE + p.getName());
+        }
         for(String pName : DBmanager.getVanished()){
-            if(Bukkit.getOfflinePlayer(pName).isOnline()){
+            if(Bukkit.getOfflinePlayer(pName).isOnline() && !p.hasPermission(PermissionUtil.mod)){
                 p.hidePlayer(Bukkit.getPlayer(pName));
             }
         }

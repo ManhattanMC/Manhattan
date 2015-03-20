@@ -25,6 +25,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bvsd.manhattanplugin.ManhattanPlugin;
@@ -54,6 +56,9 @@ public class PlayerSave {
             mainInven.add(new PlayerSaveItemStack(i));
         armorInven = new PlayerSaveArmor(is2);
         Xp=0;
+    }
+    public PlayerSave(World w){
+        
     }
     public PlayerSave(){ //for use by JSON
         
