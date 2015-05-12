@@ -64,7 +64,7 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
         if(cmd.getName().equalsIgnoreCase("vanish")&&player.hasPermission(PermissionUtil.mod)){
             if(!DBmanager.getVanished().contains(player.getName())){
                 player.sendMessage(ChatColor.DARK_PURPLE + "Vanished! Poof!");
-                if(player.getName().length() > 14){
+                if(player.getName().length() < 14){
                     player.setPlayerListName(ChatColor.BLUE + player.getName());
                 }else{
                     String newName = player.getName().substring(0, 13);
@@ -194,7 +194,11 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
                     DestName = ManhattanPlugin.getCreativeWorld().getName();
                 }
             }
-            pd.getSaves().get(WorldName).Imprint(player);
+            if(pd.getSaves().containsKey(WorldName)){
+                pd.getSaves().get(WorldName).Imprint(player);
+            }else{
+                pd.getSaves().put(WorldName, new PlayerSave());
+            }
             if(!player.isOp()){
                 for(PotionEffect effect : player.getActivePotionEffects()){
                     player.removePotionEffect(effect.getType());
