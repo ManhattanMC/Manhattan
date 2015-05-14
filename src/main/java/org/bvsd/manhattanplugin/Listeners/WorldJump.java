@@ -66,9 +66,17 @@ public class WorldJump implements Listener{
             p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, ManhattanPlugin.getOldTargets().get(p.getName())));
             ManhattanPlugin.getOldTargets().remove(p.getName());
         }
-         if(DBmanager.getVanished().contains(e.getPlayer().getName())){
+        if(DBmanager.getVanished().contains(p.getName())){
             e.setJoinMessage("");
-            p.setPlayerListName(ChatColor.BLUE + p.getName());
+            if(p.getName().length() < 14){
+                p.setPlayerListName(ChatColor.BLUE + p.getName());
+            }else{
+                String newName = p.getName().substring(0, 13);
+                p.setPlayerListName(ChatColor.BLUE + newName);
+            }
+            for(Player play:Bukkit.getOnlinePlayers()){
+                play.hidePlayer(p);
+            }
         }
         for(String pName : DBmanager.getVanished()){
             if(Bukkit.getOfflinePlayer(pName).isOnline() && !p.hasPermission(PermissionUtil.mod)){

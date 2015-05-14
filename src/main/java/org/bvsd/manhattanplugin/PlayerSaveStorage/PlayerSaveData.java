@@ -39,7 +39,7 @@ public class PlayerSaveData{
     private HashMap<String, PlayerSave> Saves = new HashMap<>(); 
     
     @JsonIgnore
-    private PlayerSave CreativeSave;
+    private PlayerSave CreativeSave;//back compat
     @JsonIgnore
     private PlayerSave SurvivalSave;
     
