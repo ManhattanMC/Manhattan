@@ -1,6 +1,8 @@
 Manhattan
 =========
 
+[![Build Status](https://travis-ci.org/DonoA/Manhattan.svg)](https://travis-ci.org/DonoA/Manhattan)
+
 Manhattan Middle School plugin
 
 Development goals and progress:
