@@ -30,6 +30,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bvsd.manhattanplugin.ChestLoc.ChestCommands;
 import org.bvsd.manhattanplugin.ChestLoc.ChestLock;
+import org.bvsd.manhattanplugin.TheGame.GameCommands;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -57,6 +58,7 @@ public class ManhattanPlugin extends JavaPlugin{
      */
     @Override
     public void onEnable(){
+        this.plugin = this;
         this.getConfig().options().copyDefaults(true);
         JSon = new ObjectMapper()
                 .configure(SerializationConfig.Feature.INDENT_OUTPUT, true)
@@ -71,7 +73,9 @@ public class ManhattanPlugin extends JavaPlugin{
         SurvivalWorld = Bukkit.getWorld("S-Main");
         
         getCommand("worldjump").setExecutor(new Commands());
-        getCommand("deathgames").setExecutor(new Commands());
+        getCommand("helpbook").setExecutor(new Commands());
+        getCommand("thegame").setExecutor(new GameCommands());
+//       getCommand("deathgames").setExecutor(new Commands());
         getCommand("vanish").setExecutor(new Commands());
         getCommand("tpm").setExecutor(new TPmCommand());
 //        getCommand("HZone").setExecutor(new Commands());
@@ -82,9 +86,9 @@ public class ManhattanPlugin extends JavaPlugin{
             getCommand("chest").setExecutor(new ChestCommands());
             pm.registerEvents(new ChestLock(), this);
         }
-        this.plugin = this;
         
-        DBmanager.LoadDG();
+        
+//        DBmanager.LoadDG();
 //        DBmanager.LoadHZones();
         
         DBmanager.getVanished().add("none");

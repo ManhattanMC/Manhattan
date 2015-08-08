@@ -82,20 +82,20 @@ public class DBmanager {
             PSF.mkdirs();
         }
         boolean successful = true;
-            File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
-            File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
-            try {
-                ManhattanPlugin.getJSon().writeValue(NLoc, Playerdats.get(name));
-            } catch (IOException ex) {
-                successful = false;
-            } finally {
-                if (successful) {
-                    if (OLoc.exists()) {
-                        OLoc.delete();
-                    }
-                    NLoc.renameTo(OLoc);
+        File NLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat.new");
+        File OLoc = new File(PSF + System.getProperty("file.separator") + Bukkit.getPlayer(name).getUniqueId().toString() + ".playerdat");
+        try {
+            ManhattanPlugin.getJSon().writeValue(NLoc, Playerdats.get(name));
+        } catch (IOException ex) {
+            successful = false;
+        } finally {
+            if (successful) {
+                if (OLoc.exists()) {
+                    OLoc.delete();
                 }
+                NLoc.renameTo(OLoc);
             }
+        }
     }
     /**
      * Loads the player's dat through JSON
@@ -112,6 +112,7 @@ public class DBmanager {
                 Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 System.out.println("IO ERROR");
+                ex.printStackTrace();
                 Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             }
             Playerdats.put(pName, pd);
@@ -132,6 +133,7 @@ public class DBmanager {
                 ManhattanPlugin.setDg(new DeathGame());
         } catch (IOException ex) {
             System.out.println("IO ERROR");
+            ex.printStackTrace();
         }
     }
     /**
@@ -150,6 +152,7 @@ public class DBmanager {
                     Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 System.out.println("IO ERROR");
+                ex.printStackTrace();
             }
         }
     }
@@ -192,6 +195,7 @@ public class DBmanager {
                     Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 System.out.println("IO ERROR");
+                ex.printStackTrace();
             }
         }
     }

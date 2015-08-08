@@ -88,7 +88,16 @@ public class PlayerSave {
     @JsonIgnore
     public void SetImprint(Player p){ //sets Player to PlayerSave
         p.getInventory().clear();
-        p.teleport(lastLoc.toLocation());
+        try{
+            p.teleport(lastLoc.toLocation());
+        }catch(Exception ex){
+            if(p.getWorld().equals(ManhattanPlugin.getSurvivalWorld())){
+                p.teleport(ManhattanPlugin.getSurvivalWorld().getSpawnLocation());
+            }else{
+                p.teleport(ManhattanPlugin.getCreativeWorld().getSpawnLocation());
+            }
+            
+        }
         p.setExp(Xp);
         p.setLevel(lvl);
         pHold = p;
