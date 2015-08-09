@@ -19,6 +19,12 @@ commands:
   Vanish:
     description: become invisible
     usage: /vanish
+  helpbook:
+    description: give the player the help book
+    usage: /helpbook
+  thegame:
+    description: only the wise
+    usage: you dont use the game, the game uses you
   tpm:
     description: moderator teleport
     usage: /tpm <target player>

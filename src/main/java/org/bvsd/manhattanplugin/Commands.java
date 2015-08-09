@@ -32,6 +32,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -207,12 +208,54 @@ public class Commands implements CommandExecutor{ // need to make TabExecutor
             if(pd.getSaves().containsKey(DestName)){
                 pd.getSaves().get(DestName).SetImprint(player);
             }else{
-                pd.getSaves().put(DestName, new PlayerSave(Bukkit.getWorld(DestName).getSpawnLocation(), new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)}));
+                pd.getSaves().put(DestName, new PlayerSave(Bukkit.getWorld(DestName).getSpawnLocation(), 
+                        new ItemStack[] {}, new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), 
+                            new ItemStack(Material.AIR), new ItemStack(Material.AIR)}));
                 pd.getSaves().get(DestName).SetImprint(player);
             }
             DBmanager.SavePlayer(player.getName());
             return true;
         }
+        
+        if(cmd.getName().equalsIgnoreCase("helpbook")){
+            if(cs instanceof Player){
+                String Command = "give "+((Player) cs).getName()+" minecraft:written_book 1 0 {author:\"Dallen\",title:\"Getting Started\",pages:["
+                        + "\"{text:\\\"Welcome,\\\\nIf you are new here, we are oh so glad to have you join.\\\\n\\\\nI, am Dallen (previously known as dallen1393),"
+                        + " the admin of the server. I write and maintain the Manhattan plugin as well as keep things up to date.\\\"}\",\"{text:\\\"Contents:\\\\n\\\","
+                        + "extra:[{text:\\\"1) Ranks\\\\n\\\",bold:\\\"true\\\",color:\\\"red\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"3\\\"}},"
+                        + "{text:\\\"2) WorldJump\\\\n\\\",bold:\\\"true\\\",color:\\\"gold\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"4\\\"}},"
+                        + "{text:\\\"3) Rules\\\\n\\\",bold:\\\"true\\\",color:\\\"green\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"5\\\"}},"
+                        + "{text:\\\"4) Url\\\\n\\\",bold:\\\"true\\\",color:\\\"blue\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"6\\\"}},"
+                        + "{text:\\\"5) DeathGames\\\\n\\\",bold:\\\"true\\\",color:\\\"gray\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"7\\\"}},"
+                        + "{text:\\\"6) Development\\\\n\\\",bold:\\\"true\\\",color:\\\"aqua\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"8\\\"}}]}\",\""
+                        + "{text:\\\"<- Ranks:\\\\n\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"2\\\"},"
+                        + "extra:[{text:\\\"There are only 3 ranks on the server: Memeber, Mod, and Admin. As of right now I am the only admin. "
+                        + "There are usually around 3 mods, although this can change, and members are not limited. Members consist of all other players.\\\"}]}\",\""
+                        + "{text:\\\"<- WorldJump:\\\\n\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"2\\\"},"
+                        + "extra:[{text:\\\"WorldJump is the command used to change worlds here on the server. There are currently two worlds, "
+                        + "Creative and Survival. This command will save your inventory, and jumps you. Although it saves your stuff, "
+                        + "it might not work, so put your stuff in a chest.\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"\\\"}}]}\",\""
+                        + "{text:\\\"<- Rules:\\\\nThe rules are simple, no stealing, killing, griefing, spamming, or swearing. "
+                        + "We have LogBlock on this server, so remember... we are always watching. \\\",clickEvent:{action:\\\"change_page\\\",value:\\\"2\\\"}}"
+                        + "\",\"{text:\\\"<- Url:\\\\nThe default url for this server is 66.85.142.10:25891. That is terrible though, "
+                        + "to Dallen made it so you can also use mms.dallen.xyz.\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"2\\\"}}"
+                        + "\",\"{text:\\\"<- DeathGames:\\\\nThe DeathGames are currently closed and may open some time this year. "
+                        + "When they do you will be notified.\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"2\\\"}}\",\""
+                        + "{text:\\\"<- Development:\\\\nThe Manhattan plugin source can be found \\\","
+                        + "clickEvent:{action:\\\"change_page\\\",value:\\\"2\\\"},extra:[{text:\\\"here\\\",bold:\\\"true\\\","
+                        + "clickEvent:{action:\\\"open_url\\\",value:\\\"https://github.com/ManhattanMC/Manhattan\\\"}},"
+                        + "{text:\\\"\\\\nif you would like to develop for the server, and possibly become a mod/admin please contact myself (Dallen) "
+                        + "or make some pull requests to the repo, Ill notice :D\\\"}]}\",\"{text:\\\"<- End Matter:\\\\n\\\",clickEvent:{action:\\\"change_page\\\",value:\\\"2\\\"},"
+                        + "extra:[{text:\\\"1) LogBlock Tutorial\\\\n\\\",clickEvent:{action:\\\"open_url\\\",value:\\\"https://github.com/LogBlock/LogBlock/wiki/Commands\\\"}},"
+                        + "{text:\\\"2) Essentials\\\",clickEvent:{action:\\\"open_url\\\",value:\\\"http://wiki.ess3.net/wiki/Command_Reference\\\"}}]}\",\""
+                        + "{text:\\\"\\\"}\",\"{text:\\\"\\\"}\",\"{text:\\\"You have to let it all go, \\\",extra:[{text:\\\""+((Player) cs).getName()+"\\\",obfuscated:\\\"true\\\"},"
+                        + "{text:\\\"\\\\nFear, doubt, and disbelief. Free your mind.\\\\n\\\\n\\\\n\\\\n\\\"},{text:\\\"Go\\\",bold:\\\"true\\\",color:\\\"white\\\","
+                        + "clickEvent:{action:\\\"run_command\\\",value:\\\"/thegame begin\\\"}}]}\"]}";
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Command);
+                return true;
+            }
+        }
+        
         return false;
     }
     
